@@ -12,7 +12,7 @@ const initialState = {
 export const fetchHotels = createAsyncThunk(
   "hotelsList/fetchHotels",
   async () => {
-    return await fetch('http://localhost:3001/')
+    return await fetch('http://localhost:3000/api/admin/hotels')
     .then(res => res.json())
   }
 );
@@ -36,7 +36,7 @@ export const hotelsListSlice = createSlice({
       .addCase(fetchHotels.fulfilled, (state, action) => {
         state.loading = false;
         state.error = '';
-        state.hotels = action.payload.Search;
+        state.hotels = action.payload;
       })
       .addCase(fetchHotels.rejected, (state, action) => {
         state.loading = false;

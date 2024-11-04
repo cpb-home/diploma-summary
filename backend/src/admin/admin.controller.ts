@@ -5,6 +5,7 @@ import { UserDocument } from 'src/schemas/user.schema';
 import { IparamId } from 'src/interfaces/param-id';
 import { UpdateUserDto } from 'src/interfaces/dto/update-user';
 import { HotelDocument } from 'src/schemas/hotel.schema';
+import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -49,8 +50,8 @@ export class AdminController {
   }
 
   @Post('/hotels')
-  public createHotel(@Body() body: CreateUserDto): Promise<UserDocument> {
-    return this.adminService.createUser(body);
+  public createHotel(@Body() body: CreateHotelDto): Promise<HotelDocument> {
+    return this.adminService.createHotel(body);
   }
   /*
     1. 401 - если пользователь не авторизован

@@ -5,9 +5,8 @@ export interface IHotelsListReducer {
 }
 
 export interface IHotelsListItem {
-  Title?: string;
-  Year?: string;
-  imdbID: string;
-  Type?: string;
-  Poster?: string;
+  title: string;
+  description?: string;
+  createAt: Date;
+  updatedAt: Date;
 }
