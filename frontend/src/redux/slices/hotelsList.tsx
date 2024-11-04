@@ -12,7 +12,7 @@ const initialState = {
 export const fetchHotels = createAsyncThunk(
   "hotelsList/fetchHotels",
   async () => {
-    return await fetch('http://localhost:3000/api/admin/hotels')
+    return await fetch(import.meta.env.VITE_COMMON_HOTELS_LIST)
     .then(res => res.json())
   }
 );

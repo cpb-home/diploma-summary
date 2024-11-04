@@ -5,6 +5,7 @@ import { fetchHotels } from "../../redux/slices/hotelsList";
 const MainPage = () => {
   const hotelsList = useAppSelector(state => state.hotelsList);
   const dispatch = useAppDispatch();
+  
 
   useEffect(() => {
     dispatch(fetchHotels());

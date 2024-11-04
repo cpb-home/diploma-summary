@@ -16,10 +16,15 @@ export class AdminService {
     @InjectConnection() private connection: Connection,
   ) {}
 
-  public createUser(data: CreateUserDto): Promise<UserDocument> {
+  public async createUser(data: CreateUserDto): Promise<UserDocument> {
     const user = new this.UserModel(data);
+    const result = await user.save();
+    
+    console.log('*** OPEN ***');
+    console.log(result);
+    console.log('*** CLOSE ***');
 
-    return user.save();
+    return result;
   }
 
   public getAllUsers(): Promise<UserDocument[]> {
