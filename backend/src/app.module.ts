@@ -8,6 +8,7 @@ import { AdminService } from './admin/admin.service';
 import { AdminController } from './admin/admin.controller';
 import { User, UserSchema } from './schemas/user.schema';
 import { Hotel, HotelSchema } from './schemas/hotel.schema';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { Hotel, HotelSchema } from './schemas/hotel.schema';
       { name: Hotel.name, schema: HotelSchema }
     ]),
     AdminModule,
+    CommonModule,
   ],
   controllers: [AppController, AdminController],
   providers: [AppService, AdminService],

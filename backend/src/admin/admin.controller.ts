@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
 import { UserDocument } from 'src/schemas/user.schema';
@@ -6,6 +6,7 @@ import { IparamId } from 'src/interfaces/param-id';
 import { UpdateUserDto } from 'src/interfaces/dto/update-user';
 import { HotelDocument } from 'src/schemas/hotel.schema';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
+import { createHash } from 'crypto';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -13,21 +14,31 @@ export class AdminController {
 
   @Get('/users')
   public getAllUsers(): Promise<UserDocument[]> {
+    /*
+      1. if (currentUser isNotAuthorized) error 401
+      2. id (currentUser !== 'admin' || currentUser !== 'mainAdmin') error 403
+    */
+
     return this.adminService.getAllUsers();
   }
-  /*
-    1. 401 - если пользователь не авторизован
-    2. 403 - если пользователь не админ
-  */
   
   @Post('/users')
-  public createUser(@Body() body: CreateUserDto): Promise<UserDocument> {
+  public async createUser(@Body() body: CreateUserDto): Promise<UserDocument> {
+    /*
+      1. if (currentUser isNotAuthorized) error 401
+      2. id (currentUser !== 'admin' || currentUser !== 'mainAdmin') error 403
+    */
+
+    const allUsers = await this.getAllUsers();
+    
+    const isExisted = allUsers.find(e => e.email === body.email);
+    if (isExisted) {
+      throw new HttpException('Такой пользователь уже существует', 400);
+    }
+    
+    body.passwordHash = createHash("md5").update(body.passwordHash).digest("hex");
     return this.adminService.createUser(body);
   }
-  /*
-    1. 401 - если пользователь не авторизован
-    2. 403 - если пользователь не админ
-  */
 
   @Put('/users/:id')
   public updateUser(

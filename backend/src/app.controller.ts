@@ -6,6 +6,7 @@ import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { Hotel, HotelDocument } from './schemas/hotel.schema';
 import { Connection, Model } from 'mongoose';
+import { createHash } from 'crypto';
 
 @Controller()
 export class AppController {
@@ -22,11 +23,13 @@ export class AppController {
     if (allUsers) {
       const mainAdmin = allUsers.find(e => e.email === 'mainAdmin@admin.ru');
       if (!mainAdmin) {
+        const pass = '55555';
+        const hash = createHash("md5").update(pass).digest("hex");
           this.adminService.createUser({
-          email: "mainAdmin@admin.ru",
-          passwordHash: "as",
+          email: "admin@admin.ru",
+          passwordHash: hash,
           name: "main",
-          contactPhone: "555",
+          contactPhone: "55555",
           role: "mainAdmin"
         });
         message = 'Main admin created.';
