@@ -33,6 +33,8 @@ services:
       PORT: 3000
       DB_URL: http://localhost:8081/
       MONGO_INITDB_DATABASE: hotelsDB
+    # volumes: 
+    #   - ./backend:/app
     depends_on:
       - mongo
 

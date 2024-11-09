@@ -19,16 +19,12 @@ export class AdminService {
   public async createUser(data: CreateUserDto): Promise<UserDocument> {
     const user = new this.UserModel(data);
     const result = await user.save();
-    
-    console.log('*** OPEN ***');
-    console.log(result);
-    console.log('*** CLOSE ***');
 
     return result;
   }
 
-  public getAllUsers(): Promise<UserDocument[]> {
-    return this.UserModel.find().exec();
+  public async getAllUsers(): Promise<UserDocument[]> {
+    return await this.UserModel.find().exec();
   }
 
   public updateUser(id: string, data: UpdateUserDto): Promise<UserDocument> {

@@ -21,8 +21,8 @@ export class AdminController {
   */
   
   @Post('/users')
-  public async createUser(@Body() body: CreateUserDto): Promise<UserDocument> {
-    return await this.adminService.createUser(body);
+  public createUser(@Body() body: CreateUserDto): Promise<UserDocument> {
+    return this.adminService.createUser(body);
   }
   /*
     1. 401 - если пользователь не авторизован
