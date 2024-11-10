@@ -13,13 +13,13 @@ export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
   @Get('/users')
-  public getAllUsers(): Promise<UserDocument[]> {
+  public async getAllUsers(): Promise<UserDocument[]> {
     /*
       1. if (currentUser isNotAuthorized) error 401
       2. id (currentUser !== 'admin' || currentUser !== 'mainAdmin') error 403
     */
 
-    return this.adminService.getAllUsers();
+    return await this.adminService.getAllUsers();
   }
   
   @Post('/users')
@@ -56,8 +56,9 @@ export class AdminController {
 
 
   @Get('/hotels')
-  public getAllHotels(): Promise<HotelDocument[]> {
-    return this.adminService.getAllHotels();
+  public async getAllHotels(): Promise<HotelDocument[]> {
+    return await this.adminService.getAllHotels();
+    
   }
 
   @Post('/hotels')

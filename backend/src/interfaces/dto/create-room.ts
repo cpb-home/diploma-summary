@@ -1,9 +1,9 @@
 import { IsBoolean, IsDate, IsNotEmpty, IsOptional } from "class-validator";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 export class CreateRoomDto {
   @IsNotEmpty()
-  hotel: ObjectId;
+  hotel: Types.ObjectId;
 
   @IsOptional()
   description?: string;

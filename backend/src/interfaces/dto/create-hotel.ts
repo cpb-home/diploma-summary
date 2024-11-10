@@ -7,12 +7,12 @@ export class CreateHotelDto {
 
   @IsOptional()
   description?: string;
-
+/*
   @IsNotEmpty()
   @IsDate()
   createdAt: Date;
 
   @IsNotEmpty()
   @IsDate()
-  updatedAt: Date;
+  updatedAt: Date;*/
 }

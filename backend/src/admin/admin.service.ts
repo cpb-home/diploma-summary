@@ -41,6 +41,7 @@ export class AdminService {
 
 
   public createHotel(data: CreateHotelDto): Promise<HotelDocument> {
+    
     const hotel = new this.HotelModel(data);
     hotel.createdAt = new Date();
     hotel.updatedAt = new Date();
