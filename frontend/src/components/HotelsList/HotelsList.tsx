@@ -2,18 +2,17 @@ import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { fetchHotels } from "../../redux/slices/hotelsList";
 import Pagination from "../Pagination/Pagination";
+import { Link } from "react-router-dom";
 
-const ROWS_PER_PAGE = 10;
-const getTotalPageCount = (rowCount: number): number => Math.ceil(rowCount / ROWS_PER_PAGE);
+const ITEMS_PER_PAGE = 5;
+const getTotalPageCount = (rowCount: number): number => Math.ceil(rowCount / ITEMS_PER_PAGE);
 
 const HotelsList = () => {
   const hotelsList = useAppSelector(state => state.hotelsList);
-  const hotelsState = useAppSelector(state => state.hotelsListState);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
 
-  const sortedHotels = [...hotelsList.hotels].sort((a, b) => a.title > b.title ? 1 : -1);
-  // .slice((page - 1) * 10, 10)
+  const sortedHotels = [...hotelsList.hotels].sort((a, b) => a.title > b.title ? 1 : -1).slice((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE*page);
   
   useEffect(() => {
     dispatch(fetchHotels());
@@ -33,18 +32,29 @@ const HotelsList = () => {
 
     setPage(prev > 0 ? prev : current);
   }, [page]);
-
+console.log(hotelsList.hotels)
   return (
     <section className="hotelList__section">
       <div>
         {
-          !hotelsState.loading ? 
+          !hotelsList.loading ? 
             hotelsList.hotels.length === 0 ? 'Пока в базе нет гостиниц. Заходите попозже.' : 
-          <ul>
+          <div className="hotelsList__list">
             { 
-              sortedHotels.map((e, i) => <li key={i}>{e.title}</li>)
+              sortedHotels.map((e, i) => 
+                <Link className="hotelList_link" key={i} to={`/hotels/search/${e._id}`}>
+                  <div className="hotelList_item">
+                    <header className="hotelList_item-header">
+                      {e.title}
+                    </header>
+                    <div className="hotelList_item-desc">
+                    {e.description}
+                    </div>
+                  </div>
+                </Link>
+              )
             }
-          </ul>
+          </div>
           : "Идёт загрузка списка гостиниц"
         }
       </div>
@@ -56,6 +66,7 @@ const HotelsList = () => {
             left: page === 1,
             right: page === getTotalPageCount(hotelsList.hotels.length)
           }}
+          nav={{current: page, total: getTotalPageCount(hotelsList.hotels.length)}}
         />
       )}
     </section>

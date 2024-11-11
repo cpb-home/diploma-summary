@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "../../ui/Button";
 
 type PaginationProps = {
   onNextPageClick: () => void;
@@ -26,13 +27,41 @@ const Pagination = (props: PaginationProps) => {
 
   return (
     <div className="paginator">
+      {<Button
+        type='button'
+        handler={handlePrevPageClick}
+        text='<'
+        disabled={disable.left}
+      />}
+
+      {nav && (
+        <span className="paginator__navigation">
+          {nav.current} / {nav.total}
+        </span>
+      )}
+
+      {<Button 
+        type='button'
+        handler={handleNextPageClick}
+        text='>'
+        disabled={disable.right}
+      />}
+    </div>
+  )
+}
+
+export default React.memo(Pagination);
+
+/*
+return (
+    <div className="paginator">
       <button
         className="paginator__arrow" 
         type="button"
         onClick={handlePrevPageClick}
         disabled={disable.left}
       >
-        {'<'}
+        {'< Предыдущие ' + perPage}
       </button>
 
       {nav && (
@@ -47,10 +76,9 @@ const Pagination = (props: PaginationProps) => {
         onClick={handleNextPageClick}
         disabled={disable.right}
       >
-        {'>'}
+        {'Следующие ' + perPage + ' >'}
       </button>
     </div>
   )
 }
-
-export default React.memo(Pagination);
+*/

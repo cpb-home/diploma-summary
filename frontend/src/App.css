@@ -1,5 +1,8 @@
 :root {
   --main-color-DarkBlue: #00165e;
+  --main-color-MiddleBlue: #233e96;
+  --main-color-LightBlue: #829cf3;
+  --main-color-Grey: grey;
   
   --main-fontColor-white: white;
   --main-fontColor-gold: gold;
@@ -67,10 +70,11 @@ h1, h2, h3 {
 
 .header__menuList__item {
   text-transform: uppercase;
+  font-weight: 500;
 }
 
 .header__menu-link {
-  color: var(--main-fontColor-white);
+  color: var(--main-color-LightBlue);
   text-decoration: none;
 }
 
@@ -95,13 +99,63 @@ h1, h2, h3 {
   padding-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 10px;
 }
 
+.button {
+  border: 2px solid var(--main-color-DarkBlue);
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: var(--main-color-DarkBlue);
+  color: var(--main-color-LightBlue);
+  margin: 10px;
+}
 
+.button:hover {
+  background-color: var(--main-color-DarkBlue);
+  color: var(--main-color-LightBlue);
+  cursor: pointer;
+}
 
+.button:disabled, .button:disabled:hover {
+  background-color: var(--main-color-Grey);
+  color: var(--main-color-DarkBlue);
+  cursor: default;
+}
 
+.hotelsList__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
 
+.hotelList_link {
+  width: 600px;
+  text-decoration: none;
+  color: var(--main-color-DarkBlue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hotelList_item {
+  width: 600px;
+  border: 2px solid var(--main-color-DarkBlue);
+  border-radius: 10px;
+  padding: 10px;
+
+  &:hover {
+    background-color: var(--main-color-LightBlue);
+  }
+}
+
+.hotelList_item-header {
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
 
 
 

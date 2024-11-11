@@ -5,6 +5,7 @@ export interface IHotelsListReducer {
 }
 
 export interface IHotelsListItem {
+  _id: string;
   title: string;
   description?: string;
   createAt: Date;
