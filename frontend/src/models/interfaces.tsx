@@ -10,4 +10,15 @@ export interface IHotelsListItem {
   description?: string;
   createAt: Date;
   updatedAt: Date;
+  availableRooms: IRoom[];
+}
+
+export interface IRoom {
+  _id: string;
+  hotel: string;
+  description?: string;
+  images: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  isEnabled: boolean;
 }

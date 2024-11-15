@@ -40,7 +40,11 @@ export const hotelsListSlice = createSlice({
       })
       .addCase(fetchHotels.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        if (action.error.message === 'Failed to fetch') {
+          state.error = 'Не удалось подключиться к серверу. Попробуйте позже.';  
+        } else {
+          state.error = action.error.message as string;
+        }
       })
   }
 });

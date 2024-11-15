@@ -9,6 +9,7 @@ import { AdminController } from './admin/admin.controller';
 import { User, UserSchema } from './schemas/user.schema';
 import { Hotel, HotelSchema } from './schemas/hotel.schema';
 import { CommonModule } from './common/common.module';
+import { HotelRoom, HotelRoomSchema } from './schemas/hotelRoom.schema';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { CommonModule } from './common/common.module';
     MongooseModule.forRoot(process.env.MONGO_CONNECTION),
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
-      { name: Hotel.name, schema: HotelSchema }
+      { name: Hotel.name, schema: HotelSchema },
+      { name: HotelRoom.name, schema: HotelRoomSchema }
     ]),
     AdminModule,
     CommonModule,
