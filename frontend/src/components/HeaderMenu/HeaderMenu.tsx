@@ -12,7 +12,7 @@ const HeaderMenu = () => {
       <ul className="header__menuList">
         {mainMenuItems.map((item, id) => 
           <li className="header__menuList__item" key={id}>
-            <NavLink className={selected} to={item.link} title={item.text}>{item.text}</NavLink>
+            <NavLink className={selected} to={item.link} title={item.text} state={{hotelId: ''}}>{item.text}</NavLink>
           </li>
         )}
       </ul>

@@ -5,38 +5,42 @@ import { MessageDocument } from 'src/schemas/message.schema';
 import { CreateMessageDto } from 'src/interfaces/dto/create-message';
 import { HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
 import { IparamId } from 'src/interfaces/param-id';
-import { IHotelWithRooms } from 'src/interfaces/param-hotelsWithRooms';
+import { IHotelsListItem } from 'src/interfaces/param-hotelsWithRooms';
 
 @Controller('/api/common')
 export class CommonController {
   constructor (private readonly commonService: CommonService) {}
 
-  @Get('/hotels')
-  public async getAllHotels(): Promise<IHotelWithRooms[]>/*Promise<HotelDocument[]>*/ {
+  @Get('/hotels') //COMMON_HOTELS_LIST
+  public async getAllHotels(): Promise<IHotelsListItem[]>/*Promise<HotelDocument[]>*/ {
     const allHotels = await this.commonService.getAllHotels();
-    const sendHotelsList: IHotelWithRooms[] = [];
+    const sendHotelsList: IHotelsListItem[] = [];
 
     for (const hotel of allHotels) {
-      console.log('start');
       const updatedHotel = {
-        _id: hotel._id,
+        _id: hotel._id.toString(),
         title: hotel.title,
         description: hotel.description,
         createdAt: hotel.createdAt,
         updatedAt: hotel.updatedAt,
-        availableRooms: (await this.commonService.getAvailableRoomsForHotel((hotel._id).toString()))
+        availableRooms: [],
       };
-      console.log('end');
-      // const roomsForHotel = await this.commonService.getAvailableRoomsForHotel(allHotels[i]._id as string);console.log(roomsForHotel.length);
-      // roomsForHotel.forEach(room => updatedHotel.availableRooms.push(room));
+      const roomsForHotel = await this.commonService.getExistedRoomsForHotel((hotel._id).toString())
+      roomsForHotel.forEach(room => updatedHotel.availableRooms.push({
+        _id: room._id.toString(),
+        description: room.description,
+        images: room.images,
+        createdAt: room.createdAt,
+        updatedAt: room.updatedAt,
+        isEnabled: room.isEnabled,
+        hotel: {_id: hotel._id, title: hotel.title, description: hotel.description}
+      }));
       sendHotelsList.push(updatedHotel);
     }
-    //console.log(sendHotelsList);
     return sendHotelsList;
-    //return allHotels;
   }
 
-  @Get('/hotel/rooms')
+  @Get('/hotel/rooms') //COMMON_ROOMS_LIST
   public getAllRooms(): Promise<HotelRoomDocument[]> {
     return this.commonService.getAllRooms();
   }
@@ -46,7 +50,7 @@ export class CommonController {
     return this.commonService.getRoomInfo(id);
   }
 
-  @Get('/hotels/:id/rooms')
+  @Get('/hotels/:id/rooms') //COMMON_HOTEL_ROOMS_LIST
   public async getAvailableRoomsForHotel(@Param() { id }: IparamId): Promise<HotelRoomDocument[]> {
     return await this.commonService.getAvailableRoomsForHotel(id);
   }

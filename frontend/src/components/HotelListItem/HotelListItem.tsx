@@ -8,15 +8,16 @@ const HotelListItem = (props: IHotelListItemProps) => {
   const { title, description, rooms } = props;
 
   return (
-    <div className="hotelList_item">
-      <header className="hotelList_item-header">
+    <div className="hotelList__item">
+      <header className="hotelList__item-header">
         {title}
       </header>
-      <div className="hotelList_item-desc">
+      <div className="hotelList__item-desc">
         {description}
       </div>
-      <div className="hotelList_item-roomsAvailable">
-        {rooms > 0 ? `Доступно для бронирования номеров: ${rooms} шт.`: 'Нет свободных номеров'}
+      <div className="hotelList__item-roomsAvailable">
+        {rooms ? <span className="green">Всего номеров в гостинице: {rooms} шт.</span>
+        : <span className="red">Гостиница не предоставляет номера частным клиентам</span>}
       </div>
     </div>
   )

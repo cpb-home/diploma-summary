@@ -1,7 +1,6 @@
 import HotelsList from "../../components/HotelsList/HotelsList"
 
 const MainPage = () => {
-  
 
   return (
     <div className="container">
@@ -14,6 +13,3 @@ const MainPage = () => {
 }
 
 export default MainPage
-/*
-
-*/

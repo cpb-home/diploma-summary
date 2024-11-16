@@ -3,6 +3,8 @@
   --main-color-MiddleBlue: #233e96;
   --main-color-LightBlue: #829cf3;
   --main-color-Grey: grey;
+  --mail-color-red: red;
+  --main-color-green: green;
   
   --main-fontColor-white: white;
   --main-fontColor-gold: gold;
@@ -24,6 +26,14 @@ h1, h2, h3 {
   width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+.red {
+  color: var(--mail-color-red);
+}
+
+.green {
+  color: var(--main-color-green);
 }
 
 
@@ -95,7 +105,7 @@ h1, h2, h3 {
   min-height: calc(100vh - 140px);
 }
 
-.main__cont {
+.main__cont, .search__cont {
   padding-top: 20px;
   display: flex;
   flex-direction: column;
@@ -112,8 +122,8 @@ h1, h2, h3 {
 }
 
 .button:hover {
-  background-color: var(--main-color-DarkBlue);
-  color: var(--main-color-LightBlue);
+  background-color: var(--main-color-LightBlue);;
+  color: var(--main-color-DarkBlue);
   cursor: pointer;
 }
 
@@ -130,7 +140,7 @@ h1, h2, h3 {
   align-items: center;
 }
 
-.hotelList_link {
+.hotelList__link {
   width: 600px;
   text-decoration: none;
   color: var(--main-color-DarkBlue);
@@ -139,7 +149,7 @@ h1, h2, h3 {
   align-items: center;
 }
 
-.hotelList_item {
+.hotelList__item {
   width: 600px;
   border: 2px solid var(--main-color-DarkBlue);
   border-radius: 10px;
@@ -150,23 +160,47 @@ h1, h2, h3 {
   }
 }
 
-.hotelList_item-header {
+.hotelList__item-header {
   font-weight: bold;
   font-size: 20px;
   text-transform: uppercase;
   margin-bottom: 15px;
 }
 
-.hotelList_item-desc {
+.hotelList__item-desc {
   font-size: 16px;
   text-align: justify;
   padding-bottom: 5px;
 }
 
-.hotelList_item-roomsAvailable {
+.hotelList__item-roomsAvailable {
   font-size: 14px;
   text-align: right;
+  font-weight: bold;
 }
+
+.search__formCont {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-bottom: 2px solid var(--main-color-DarkBlue);
+}
+
+.search__form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  & input {
+    font-size: 16px;
+    padding: 3px;
+    color: var(--main-color-DarkBlue);
+  }
+}
+
+
 
 
 

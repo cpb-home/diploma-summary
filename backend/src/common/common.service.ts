@@ -28,9 +28,11 @@ export class CommonService {
 
   public async getAvailableRoomsForHotel(hotelId: string): Promise<HotelRoomDocument[]> {
     const hotels = await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
-    console.log(hotelId);
-    console.log(hotels.length);
     return hotels;
     //return await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
+  }
+
+  public async getExistedRoomsForHotel(hotelId: string): Promise<HotelRoomDocument[]> {
+    return await this.HotelRoomModel.find({hotel: hotelId});;
   }
 }
