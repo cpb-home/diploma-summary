@@ -1,21 +1,25 @@
-type IRoomListItemProps = {
-  _id: string;
-  images?: string[];
-  description: string | undefined;
-  isEnabled: boolean;
-  hotel: {
-    title: string;
-    description?: string;
-    _id: string;
-  };
-}
+import { IRoomListItem } from "../../models/interfaces";
 
-const RoomListItem = ( props: IRoomListItemProps ) => {
-  const { _id, isEnabled, hotel, images, description } = props;
+
+const RoomListItem = ( props: IRoomListItem ) => {
+  const { hotel, images, description } = props;
 
   return (
-    <div className="roomList">
-      {_id} {description} {isEnabled ? 'enabled' : 'disabled'} {hotel.title} {hotel._id} {images}
+    <div className="roomList__item">
+      {images && images.length > 0 && 
+        <div className="roomsList__item-imgCont">
+          <img src={images[0]} alt="room image" />
+        </div>
+      }
+      
+      <div className="roomsList__item-content">
+        <div className="roomsList__item-desc">
+          <strong>Описание номера:</strong><br /> {description}
+        </div>
+        <div className="roomsList__item-descHotel">
+        <strong>Гостиница:</strong> {hotel.title}
+        </div>
+      </div>
     </div>
   )
 }

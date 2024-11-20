@@ -19,19 +19,19 @@ export const fetchRooms = createAsyncThunk(
   'roomsList/fetchRooms',
   async (data: IRequestWithDate) => {console.log(data)
     if (data.startDate && data.finDate) {
-      if (data.hotelId) {
-        return await fetch(import.meta.env.VITE_COMMON_HOTEL_ROOMS_LIST + data.hotelId + '/rooms')
+      if (data.hotelId) {console.log('err 1');
+        return await fetch(import.meta.env.VITE_COMMON_HOTEL_ROOMS_LIST + data.hotelId + '/rooms/' + data.startDate + '/' + data.finDate)
           .then(res => res.json())
-      } else {
-        return await fetch(import.meta.env.VITE_COMMON_ROOMS_LIST)
+      } else {console.log('err 2');
+        return await fetch(import.meta.env.VITE_COMMON_ROOMS_LIST + '/' + data.startDate + '/' + data.finDate)
           .then(res => res.json())
       }
     } else {
-      if (data.hotelId) {
-        return await fetch(import.meta.env.VITE_COMMON_HOTEL_ROOMS_LIST + data.hotelId + '/rooms')
+      if (data.hotelId) {console.log('err 3');
+        return await fetch(import.meta.env.VITE_COMMON_HOTEL_ROOMS_LIST + data.hotelId + '/rooms' + '/0/0')
           .then(res => res.json())
-      } else {
-        return await fetch(import.meta.env.VITE_COMMON_ROOMS_LIST)
+      } else {console.log('err 4');
+        return await fetch(import.meta.env.VITE_COMMON_ROOMS_LIST + '/0/0')
           .then(res => res.json())
       }
     }

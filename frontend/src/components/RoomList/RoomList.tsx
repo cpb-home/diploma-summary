@@ -15,13 +15,13 @@ const getTotalPageCount = (rowCount: number): number => Math.ceil(rowCount / ITE
 
 const RoomList = (props: ISearchStateProps) => {
   const { startDate, finDate } = props;
-  const { state } = useLocation();
+  const { state } = useLocation(); console.log('hotid: ' + state.hotelId);
   const roomsList = useAppSelector(state => state.roomsList);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
 
-  const sortedRooms = [...roomsList.rooms];
-  //const sortedRooms = [...roomsList.rooms].sort((a, b) => a.hotel.title.localeCompare(b.hotel.title)).slice((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE*page);
+  //const sortedRooms = [...roomsList.rooms];
+  const sortedRooms = [...roomsList.rooms].slice((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE*page);
 
   useEffect(() => {
     if (startDate && finDate) {
@@ -65,8 +65,8 @@ const RoomList = (props: ISearchStateProps) => {
               <div className="roomsList__list">
                 {
                   sortedRooms.map((e, i) =>
-                    <Link className="hotelList__link" key={i} to={`/search/room/`} state={{roomId: e._id}}>
-                      <RoomListItem _id={e._id} description={e.description} isEnabled={e.isEnabled} hotel={e.hotel} images={e.images} />
+                    <Link className="hotelList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e._id, startDate, finDate})}}>
+                      <RoomListItem _id={e._id} description={e.description} isEnabled={e.isEnabled} hotel={e.hotel} createdAt={e.createdAt} updatedAt={e.updatedAt} images={e.images} />
                     </Link>
                   )
                 }

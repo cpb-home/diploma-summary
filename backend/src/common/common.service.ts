@@ -18,19 +18,31 @@ export class CommonService {
     return await this.HotelModel.find().exec();
   }
 
+  public async getHotelInfo(id: string): Promise<HotelDocument> {
+    return await this.HotelModel.findOne({_id: id});
+  }
+
   public async getAllRooms(): Promise<HotelRoomDocument[]> {
-    return this.HotelRoomModel.find().exec();
+    return await this.HotelRoomModel.find().exec();
+  }
+
+  public async getAllAvailableRooms(startDate?: Date, finDate?: Date): Promise<HotelRoomDocument[]> {
+    console.log('from getAll', startDate, finDate);
+    return await this.HotelRoomModel.find({isEnabled: true}).exec();
   }
 
   public async getRoomInfo(id: string): Promise<HotelRoomDocument> {
-    return this.HotelRoomModel.findOne({_id: id});
+    return await this.HotelRoomModel.findOne({_id: id});
   }
 
-  public async getAvailableRoomsForHotel(hotelId: string): Promise<HotelRoomDocument[]> {
-    const hotels = await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
-    return hotels;
+  public async getAvailableRoomsForHotel(hotelId: string, startDate?: Date, finDate?: Date): Promise<HotelRoomDocument[]> {
+    console.log('from getAvailable', startDate, finDate);
+    const rooms = await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
+    return rooms;
     //return await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
   }
+
+
 
   public async getExistedRoomsForHotel(hotelId: string): Promise<HotelRoomDocument[]> {
     return await this.HotelRoomModel.find({hotel: hotelId});;

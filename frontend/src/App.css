@@ -200,7 +200,63 @@ h1, h2, h3 {
   }
 }
 
+.roomsList__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
 
+.roomsList__link {
+  width: 600px;
+  text-decoration: none;
+  color: var(--main-color-DarkBlue);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.roomList__item {
+  width: 600px;
+  border: 2px solid var(--main-color-DarkBlue);
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+
+  &:hover {
+    background-color: var(--main-color-LightBlue);
+  }
+}
+
+.roomsList__item-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.roomsList__item-desc, .roomsList__item-descHotel {
+  font-size: 16px;
+  text-align: justify;
+  padding-bottom: 5px;
+}
+
+.roomsList__item-descHotel {
+  margin-top: 20px;
+}
+
+.roomsList__item-imgCont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roomsList__item-imgCont img {
+  width: 150px;
+}
 
 
 

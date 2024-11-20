@@ -33,7 +33,7 @@ const HotelsList = () => {
 
     setPage(prev > 0 ? prev : current);
   }, [page]);
-console.log(hotelsList.hotels)
+
   return (
     <section className="hotelList__section">
       <div>
