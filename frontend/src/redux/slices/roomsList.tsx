@@ -20,18 +20,18 @@ export const fetchRooms = createAsyncThunk(
   async (data: IRequestWithDate) => {console.log(data)
     if (data.startDate && data.finDate) {
       if (data.hotelId) {console.log('err 1');
-        return await fetch(import.meta.env.VITE_COMMON_HOTEL_ROOMS_LIST + data.hotelId + '/rooms/' + data.startDate + '/' + data.finDate)
+        return await fetch(import.meta.env.VITE_COMMON + 'hotels/' + data.hotelId + '/rooms/' + data.startDate + '/' + data.finDate)
           .then(res => res.json())
       } else {console.log('err 2');
-        return await fetch(import.meta.env.VITE_COMMON_ROOMS_LIST + '/' + data.startDate + '/' + data.finDate)
+        return await fetch(import.meta.env.VITE_COMMON + 'hotel-rooms/' + data.startDate + '/' + data.finDate)
           .then(res => res.json())
       }
     } else {
       if (data.hotelId) {console.log('err 3');
-        return await fetch(import.meta.env.VITE_COMMON_HOTEL_ROOMS_LIST + data.hotelId + '/rooms' + '/0/0')
+        return await fetch(import.meta.env.VITE_COMMON + 'hotels/' + data.hotelId + '/rooms' + '/0/0')
           .then(res => res.json())
       } else {console.log('err 4');
-        return await fetch(import.meta.env.VITE_COMMON_ROOMS_LIST + '/0/0')
+        return await fetch(import.meta.env.VITE_COMMON + 'hotel-rooms/0/0')
           .then(res => res.json())
       }
     }

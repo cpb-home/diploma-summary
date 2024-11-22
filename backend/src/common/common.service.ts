@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { Hotel, HotelDocument } from 'src/schemas/hotel.schema';
 import { HotelRoom, HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
@@ -18,11 +18,12 @@ export class CommonService {
     return await this.HotelModel.find().exec();
   }
 
-  public async getHotelInfo(id: string): Promise<HotelDocument> {
+  public async getHotelInfo(id: Types.ObjectId): Promise<HotelDocument> {
     return await this.HotelModel.findOne({_id: id});
   }
 
-  public async getAllRooms(): Promise<HotelRoomDocument[]> {
+  public async getAllRooms(startDate?: Date, finDate?: Date): Promise<HotelRoomDocument[]> {
+    console.log('from getAllRooms', startDate, finDate);
     return await this.HotelRoomModel.find().exec();
   }
 
@@ -31,12 +32,12 @@ export class CommonService {
     return await this.HotelRoomModel.find({isEnabled: true}).exec();
   }
 
-  public async getRoomInfo(id: string): Promise<HotelRoomDocument> {
+  public async getRoomInfo(id: Types.ObjectId): Promise<HotelRoomDocument> {
     return await this.HotelRoomModel.findOne({_id: id});
   }
 
-  public async getAvailableRoomsForHotel(hotelId: string, startDate?: Date, finDate?: Date): Promise<HotelRoomDocument[]> {
-    console.log('from getAvailable', startDate, finDate);
+  public async getAvailableRoomsForHotel(hotelId: Types.ObjectId, startDate?: Date, finDate?: Date): Promise<HotelRoomDocument[]> {
+    console.log('from getAvailable', hotelId, startDate, finDate);
     const rooms = await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
     return rooms;
     //return await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});

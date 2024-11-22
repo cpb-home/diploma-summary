@@ -1,11 +1,22 @@
+import { useEffect, useState } from "react";
+import { IRoomListItem } from "../../models/interfaces";
+
 type IHotelListItemProps = {
   title: string;
   description: string | undefined;
-  rooms: number;
+  id: string;
 }
 
 const HotelListItem = (props: IHotelListItemProps) => {
-  const { title, description, rooms } = props;
+  const { title, description, id } = props;
+  const [rooms, setRooms] = useState<IRoomListItem[]>([]);
+
+  useEffect(() => {
+    fetch(import.meta.env.VITE_COMMON + 'hotels/' + id + '/rooms/0/0')
+      .then(res => res.json())
+      .then(res => setRooms(res));
+  }, [id])
+  
 
   return (
     <div className="hotelList__item">
@@ -16,7 +27,7 @@ const HotelListItem = (props: IHotelListItemProps) => {
         {description}
       </div>
       <div className="hotelList__item-roomsAvailable">
-        {rooms ? <span className="green">Всего номеров в гостинице: {rooms} шт.</span>
+        {rooms.length > 0 ? <span className="green">Всего номеров в гостинице: {rooms.length} шт.</span>
         : <span className="red">Гостиница не предоставляет номера частным клиентам</span>}
       </div>
     </div>

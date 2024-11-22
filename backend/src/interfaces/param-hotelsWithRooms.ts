@@ -1,7 +1,7 @@
 import { Types } from "mongoose";
 
 export interface IHotelsListItem {
-  _id: string,
+  _id: Types.ObjectId,
   title: string,
   description: string,
   createdAt: Date,
@@ -9,10 +9,16 @@ export interface IHotelsListItem {
   availableRooms: IHotelsListItemRoom[],
 }
 
+export interface IHotelsListItemForFront {
+  id: string,
+  title: string,
+  description: string,
+}
+
 export interface IHotelsListItemRoom {
-  _id: string,
-  hotel: string;
-  description?: string;
+  _id: Types.ObjectId,
+  hotel: Types.ObjectId;
+  description: string;
   images: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -22,21 +28,12 @@ export interface IHotelsListItemRoom {
 export interface IRoomsListReducer {
   loading: boolean;
   error: string;
-  rooms: IRoomListItem[];
+  rooms: IRoomListItemForFront[];
 }
 
-export interface IRoomListItem {
-  _id: string;
-  hotel: IHotelShortInfo;
-  description?: string;
+export interface IRoomListItemForFront {
+  id: string;
+  description: string;
   images: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  isEnabled: boolean;
-}
-
-export interface IHotelShortInfo {
-  _id: string;
-  title: string,
-  description?: string;
+  hotel: IHotelsListItemForFront;
 }

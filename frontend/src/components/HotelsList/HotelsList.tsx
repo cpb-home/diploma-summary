@@ -13,8 +13,8 @@ const HotelsList = () => {
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
 
-  const sortedHotels = [...hotelsList.hotels].sort((a, b) => b.availableRooms.length - a.availableRooms.length || a.title.localeCompare(b.title)).slice((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE*page);
-  
+  const sortedHotels = [...hotelsList.hotels].sort((a, b) => a.title.localeCompare(b.title)).slice((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE*page);
+
   useEffect(() => {
     dispatch(fetchHotels());
   }, [dispatch]);
@@ -43,8 +43,8 @@ const HotelsList = () => {
               <div className="hotelsList__list">
                 { 
                   sortedHotels.map((e, i) => 
-                    <Link className="hotelList__link" key={i} to={`/hotels/search/`} state={{hotelId: e._id}}>
-                      <HotelListItem title={e.title} description={e.description} rooms={e.availableRooms.length} />
+                    <Link className="hotelList__link" key={i} to={`/hotels/search/`} state={{hotelId: e.id}}>
+                      <HotelListItem title={e.title} description={e.description} id={e.id} />
                     </Link>
                   )
                 }

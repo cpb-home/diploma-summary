@@ -5,12 +5,9 @@ export interface IHotelsListReducer {
 }
 
 export interface IHotelsListItem {
-  _id: string;
+  id: string;
   title: string;
   description?: string;
-  createAt: Date;
-  updatedAt: Date;
-  availableRooms: IHotelsListItemRoom[];
 }
 
 export interface IHotelsListItemRoom {
@@ -30,13 +27,10 @@ export interface IRoomsListReducer {
 }
 
 export interface IRoomListItem {
-  _id: string;
-  hotel: IHotelShortInfo;
+  id: string;
   description?: string;
   images: string[];
-  createdAt: Date;
-  updatedAt: Date;
-  isEnabled: boolean;
+  hotel: IHotelsListItem;
 }
 
 export interface IHotelShortInfo {

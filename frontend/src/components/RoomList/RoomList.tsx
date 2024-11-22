@@ -65,8 +65,8 @@ const RoomList = (props: ISearchStateProps) => {
               <div className="roomsList__list">
                 {
                   sortedRooms.map((e, i) =>
-                    <Link className="hotelList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e._id, startDate, finDate})}}>
-                      <RoomListItem _id={e._id} description={e.description} isEnabled={e.isEnabled} hotel={e.hotel} createdAt={e.createdAt} updatedAt={e.updatedAt} images={e.images} />
+                    <Link className="hotelList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
+                      <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
                     </Link>
                   )
                 }

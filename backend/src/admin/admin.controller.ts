@@ -29,14 +29,14 @@ export class AdminController {
       2. id (currentUser !== 'admin' || currentUser !== 'mainAdmin') error 403
     */
 
-    const allUsers = await this.getAllUsers();
+    const allUsers = await this.adminService.getAllUsers();
     
     const isExisted = allUsers.find(e => e.email === body.email);
     if (isExisted) {
       throw new HttpException('Такой пользователь уже существует', 400);
     }
     
-    body.passwordHash = createHash("md5").update(body.passwordHash).digest("hex");
+    //body.passwordHash = createHash("md5").update(body.passwordHash).digest("hex");
     return this.adminService.createUser(body);
   }
 

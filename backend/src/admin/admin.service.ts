@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model } from 'mongoose';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
+import { CreateRoomDto } from 'src/interfaces/dto/create-room';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
 import { UpdateHotelDto } from 'src/interfaces/dto/update-hotel';
 import { UpdateUserDto } from 'src/interfaces/dto/update-user';
 import { Hotel, HotelDocument } from 'src/schemas/hotel.schema';
+import { HotelRoom, HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
@@ -13,6 +15,7 @@ export class AdminService {
   constructor(
     @InjectModel(User.name) private UserModel: Model<UserDocument>,
     @InjectModel(Hotel.name) private HotelModel: Model<HotelDocument>,
+    @InjectModel(HotelRoom.name) private HotelRoomModel: Model<HotelRoomDocument>,
     @InjectConnection() private connection: Connection,
   ) {}
 
@@ -62,5 +65,17 @@ export class AdminService {
 
   public deleteHotel(id: string): Promise<HotelDocument> {
     return this.HotelModel.findOneAndDelete({ _id: id });
+  }
+
+
+  public async createRoom(data: CreateRoomDto): Promise<HotelRoomDocument> {
+    const room = new this.HotelRoomModel(data);
+    const result = await room.save();
+
+    return result;
+  }
+
+  public updateRoomInfo() {
+
   }
 }
