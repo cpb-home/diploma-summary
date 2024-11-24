@@ -6,6 +6,7 @@ import { FromBaseUser } from 'src/interfaces/fromBaseUser';
 import { LoginStatus } from 'src/interfaces/login-status.interface';
 import { JwtPayload } from 'src/interfaces/payload.interface';
 import { UsersService } from 'src/users/users.service';
+import { config } from 'dotenv';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
   }
 
   private _createToken({ email }: UserDto): any {
-    const expiresIn = process.env.EXPIRIESIN + '';
+    const expiresIn = config().parsed.EXPIRESIN;
     const user: JwtPayload = { email };
     const accessToken = this.jwtService.sign(user);
 
