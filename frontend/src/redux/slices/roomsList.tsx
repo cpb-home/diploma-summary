@@ -17,20 +17,20 @@ const initialState = {
 
 export const fetchRooms = createAsyncThunk(
   'roomsList/fetchRooms',
-  async (data: IRequestWithDate) => {console.log(data)
+  async (data: IRequestWithDate) => {
     if (data.startDate && data.finDate) {
-      if (data.hotelId) {console.log('err 1');
+      if (data.hotelId) {
         return await fetch(import.meta.env.VITE_COMMON + 'hotels/' + data.hotelId + '/rooms/' + data.startDate + '/' + data.finDate)
           .then(res => res.json())
-      } else {console.log('err 2');
+      } else {
         return await fetch(import.meta.env.VITE_COMMON + 'hotel-rooms/' + data.startDate + '/' + data.finDate)
           .then(res => res.json())
       }
     } else {
-      if (data.hotelId) {console.log('err 3');
+      if (data.hotelId) {
         return await fetch(import.meta.env.VITE_COMMON + 'hotels/' + data.hotelId + '/rooms' + '/0/0')
           .then(res => res.json())
-      } else {console.log('err 4');
+      } else {
         return await fetch(import.meta.env.VITE_COMMON + 'hotel-rooms/0/0')
           .then(res => res.json())
       }

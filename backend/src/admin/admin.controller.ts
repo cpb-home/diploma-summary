@@ -7,6 +7,7 @@ import { UpdateUserDto } from 'src/interfaces/dto/update-user';
 import { HotelDocument } from 'src/schemas/hotel.schema';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
 import { createHash } from 'crypto';
+import { UserDto } from 'src/interfaces/dto/user.dto';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -23,7 +24,7 @@ export class AdminController {
   }
   
   @Post('/users')
-  public async createUser(@Body() body: CreateUserDto): Promise<UserDocument> {
+  public async createUser(@Body() body: CreateUserDto): Promise<UserDto> {
     /*
       1. if (currentUser isNotAuthorized) error 401
       2. id (currentUser !== 'admin' || currentUser !== 'mainAdmin') error 403
@@ -95,7 +96,7 @@ export class AdminController {
   }
 
   @Post('/hotel-rooms')
-  public createRoom(@Body() body: CreateUserDto): Promise<UserDocument> {
+  public createRoom(@Body() body: CreateUserDto): Promise<UserDto> {
     return this.adminService.createUser(body);
   }
   /*

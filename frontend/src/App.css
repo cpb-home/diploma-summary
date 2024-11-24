@@ -36,6 +36,10 @@ h1, h2, h3 {
   color: var(--main-color-green);
 }
 
+.bold {
+  font-weight: 700;
+}
+
 
 /* ********** HEADER ********** */
 
@@ -94,8 +98,46 @@ h1, h2, h3 {
 }
 
 .header__accountCont {
-
+  width: 30px;
+  height: 30px;
+  background-image: url('/src/assets/images/account.png') ;
+  background-position: center;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  position: relative;
 }
+
+.header__account__submenuCont {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: var(--main-color-DarkBlue);
+  color: var(--main-fontColor-white);
+  padding: 20px 0;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+}
+
+.header__accountCont:hover .header__account__submenuCont {
+  display: flex;
+}
+
+.header__account__submenuItem {
+  text-decoration: none;
+  color: var(--main-fontColor-white);
+  width: 100%;
+  text-transform: uppercase;
+  font-size: 18px;
+  padding: 5px 20px;
+
+  &:hover {
+    color: var(--main-color-LightBlue);
+  }
+}
+
 
 
 
@@ -216,6 +258,13 @@ h1, h2, h3 {
   align-items: center;
 }
 
+.roomList__notAlink {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .roomList__item {
   width: 600px;
   border: 2px solid var(--main-color-DarkBlue);
@@ -225,10 +274,10 @@ h1, h2, h3 {
   align-items: flex-start;
   justify-content: center;
   gap: 10px;
+}
 
-  &:hover {
-    background-color: var(--main-color-LightBlue);
-  }
+.roomsList__link .roomList__item:hover {
+  background-color: var(--main-color-LightBlue);
 }
 
 .roomsList__item-content {
@@ -257,6 +306,44 @@ h1, h2, h3 {
 .roomsList__item-imgCont img {
   width: 150px;
 }
+
+.search__roomCont {
+  width: 800px;
+  margin: 0 auto;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.search__imagesCont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.search__roomDescription {
+  line-height: 26px;
+  text-align: justify;
+  width: 100%;
+}
+
+.search__roomHotelInfo {
+  font-size: 16px;
+  line-height: 26px;
+  text-align: justify;
+  width: 100%;
+}
+
+.search__roomDatesInfo {
+  line-height: 26px;
+  text-align: justify;
+  width: 100%;
+}
+
 
 
 

@@ -28,7 +28,7 @@ const HotelListItem = (props: IHotelListItemProps) => {
       </div>
       <div className="hotelList__item-roomsAvailable">
         {rooms.length > 0 ? <span className="green">Всего номеров в гостинице: {rooms.length} шт.</span>
-        : <span className="red">Гостиница не предоставляет номера частным клиентам</span>}
+        : <span className="red">В гостинице нет номеров</span>}
       </div>
     </div>
   )

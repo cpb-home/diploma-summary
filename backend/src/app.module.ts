@@ -10,6 +10,9 @@ import { User, UserSchema } from './schemas/user.schema';
 import { Hotel, HotelSchema } from './schemas/hotel.schema';
 import { CommonModule } from './common/common.module';
 import { HotelRoom, HotelRoomSchema } from './schemas/hotelRoom.schema';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -25,8 +28,10 @@ import { HotelRoom, HotelRoomSchema } from './schemas/hotelRoom.schema';
     ]),
     AdminModule,
     CommonModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController, AdminController],
-  providers: [AppService, AdminService],
+  providers: [AppService, AdminService, AuthService],
 })
 export class AppModule {}

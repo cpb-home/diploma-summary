@@ -15,7 +15,7 @@ const getTotalPageCount = (rowCount: number): number => Math.ceil(rowCount / ITE
 
 const RoomList = (props: ISearchStateProps) => {
   const { startDate, finDate } = props;
-  const { state } = useLocation(); console.log('hotid: ' + state.hotelId);
+  const { state } = useLocation();
   const roomsList = useAppSelector(state => state.roomsList);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
@@ -38,8 +38,6 @@ const RoomList = (props: ISearchStateProps) => {
       }
     }
   }, [dispatch, state.hotelId, startDate, finDate]);
-
-  console.log(roomsList);
 
   const handleNextPageClick = useCallback(() => {
     const current = page;
@@ -65,9 +63,13 @@ const RoomList = (props: ISearchStateProps) => {
               <div className="roomsList__list">
                 {
                   sortedRooms.map((e, i) =>
-                    <Link className="hotelList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
-                      <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
-                    </Link>
+                    startDate && finDate ? 
+                      <Link className="roomsList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
+                        <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
+                      </Link>
+                    : <div className="roomList__notAlink" key={i}>
+                        <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
+                      </div>
                   )
                 }
               </div> :

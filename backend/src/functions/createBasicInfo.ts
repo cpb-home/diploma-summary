@@ -51,7 +51,7 @@ async function createSuperAdmin(adminService: AdminService): Promise<string> {
       const hash = createHash("md5").update(pass).digest("hex");
         await adminService.createUser({
         email: "admin@admin.ru",
-        passwordHash: hash,
+        passwordHash: pass,// hash,
         name: "main",
         contactPhone: "55555",
         role: "mainAdmin"
