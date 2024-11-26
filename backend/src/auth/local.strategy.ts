@@ -3,15 +3,16 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { AuthService } from './auth.service';
 import { JwtPayload } from 'src/interfaces/payload.interface';
-console.log('LocalStrateg')
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
-    super();
+    super({
+      usernameField: 'email'
+    });
   }
 
-  async validate(email: JwtPayload): Promise<any> {console.log('validate is working')
+  async validate(email: JwtPayload): Promise<any> { 
     const user = await this.authService.validateUser(email);
     if (!user) {
       console.log('user NOT found')

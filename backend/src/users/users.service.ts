@@ -38,6 +38,7 @@ export class UsersService {
   }
 
   public async findOne(email: string): Promise<FromBaseUser | undefined> {
-    return this.UserModel.findOne({email});
+    const found = await this.UserModel.findOne({email});
+    return found;
   }
 }

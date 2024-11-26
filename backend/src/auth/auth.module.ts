@@ -16,7 +16,7 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule.register({
       defaultStrategy: 'jwt',
       property: 'user',
-      session: false,
+      session: true,
     }),
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => {

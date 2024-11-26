@@ -15,7 +15,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUser(payload: JwtPayload): Promise<FromBaseUser> {console.log('AuthService')
+  async validateUser(payload: JwtPayload): Promise<FromBaseUser> {
     //const hash = createHash("md5").update(payload.password).digest("hex");
     const user = await this.userService.findOne(payload.email);
     if (!user) {
