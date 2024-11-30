@@ -1,4 +1,5 @@
 interface IProps {
+  text: string;
   type: string;
   name: string;
   required?: boolean;
@@ -7,14 +8,15 @@ interface IProps {
   placeholder?: string;
   value?: string;
   state?: string;
-  setState?: () => void;
+  setState: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Input = (props: IProps) => {
-  const {type, name, required, disabled, maxLength, placeholder, value} = props;
+  const {text, type, name, required, disabled, maxLength, placeholder, value, setState} = props;
 
   return (
     <label className="inputLabel">
+      {text}
       <input 
         className="input"
         type={type} 
@@ -23,7 +25,8 @@ const Input = (props: IProps) => {
         disabled={disabled ? disabled : false} 
         maxLength={maxLength} 
         placeholder={placeholder} 
-        value={value ? value : ''} />
+        value={value ? value : ''}
+        onChange={setState} />
     </label>
   )
 }

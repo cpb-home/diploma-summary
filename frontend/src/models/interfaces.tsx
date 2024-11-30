@@ -38,3 +38,9 @@ export interface IHotelShortInfo {
   title: string,
   description?: string;
 }
+
+export interface ICurrentUser {
+  email: string | null;
+  role: string | null;
+  isAuthenticated: boolean;
+}

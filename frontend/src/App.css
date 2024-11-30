@@ -17,6 +17,10 @@
   color: var(--main-color-DarkBlue);
 }
 
+body {
+  overflow-y: scroll;
+}
+
 h1, h2, h3 {
   text-align: center;
 }
@@ -38,6 +42,27 @@ h1, h2, h3 {
 
 .bold {
   font-weight: 700;
+}
+
+.inputLabel {
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+  align-items: flex-start;
+  margin: 10px auto;
+  display: block;
+  text-align: left;
+}
+.inputLabel:first-letter {
+  text-transform: uppercase;
+}
+
+.inputLabel input {
+  font-size: 16px;
+  color: var(--main-color-DarkBlue);
+  padding: 2px;
 }
 
 
@@ -147,7 +172,7 @@ h1, h2, h3 {
   min-height: calc(100vh - 140px);
 }
 
-.main__cont, .search__cont {
+.main__cont, .search__cont, .account__cont {
   padding-top: 20px;
   display: flex;
   flex-direction: column;

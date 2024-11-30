@@ -10,10 +10,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   public handleRequest<TUser = any>(err: any, user: any, info: any, context: ExecutionContext, status?: any): TUser {
     if (err) {
-      throw new HttpException('JWT Error: ' + err, 401);
+      throw new HttpException('Ошибка JWT: ' + err, 401);
     }
     if (!user) {
-      throw new HttpException('JWT Unauthorized Error', 401);
+      throw new HttpException('Ошибка авторизации JWT', 401);
     }
     return user;
   }

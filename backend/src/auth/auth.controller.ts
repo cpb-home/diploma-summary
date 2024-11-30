@@ -4,6 +4,8 @@ import { LoginUserDto } from 'src/interfaces/dto/login-user';
 import { LoginStatus } from 'src/interfaces/login-status.interface';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAuthGuard } from './jwt.auth.guard';
+import { GetRoleDto } from 'src/interfaces/dto/get-role.dto';
+import { JwtPayload } from 'jsonwebtoken';
 
 @Controller('/api/auth')
 export class AuthController {
@@ -20,10 +22,18 @@ export class AuthController {
     return 'logouted';
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/protected')
   protected() {
     return {
       message: 'This route protected',
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('/getrole')
+  public async getRole(@Body() body: GetRoleDto): Promise<JwtPayload> {
+    const user = await this.authService.getRole(body.email);
+    return {role: user.role};
   }
 }

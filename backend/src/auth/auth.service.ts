@@ -19,18 +19,27 @@ export class AuthService {
     //const hash = createHash("md5").update(payload.password).digest("hex");
     const user = await this.userService.findOne(payload.email);
     if (!user) {
-      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Пользователь с таким e-mail не найден', HttpStatus.UNAUTHORIZED);
     }
     return user;
   }
 
   async login(LoginUserDto: LoginUserDto): Promise<LoginStatus> {
-    const user = await this.userService.findByLogin(LoginUserDto);
+    const user = await this.userService.findByLogin(LoginUserDto); // id, email, role
     const token = this._createToken(user);
     return {
       email: user.email,
+      role: user.role,
       ...token,
     }
+  }
+
+  async getRole(email: string): Promise<FromBaseUser> {
+    const user = await this.userService.findOne(email);
+    if (!user) {
+      throw new HttpException('Пользователь с таким e-mail не найден', HttpStatus.UNAUTHORIZED);
+    }
+    return user;
   }
 
   private _createToken({ email }: UserDto): any {

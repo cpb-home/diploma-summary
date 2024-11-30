@@ -26,7 +26,7 @@ export class UsersService {
     const user = await this.findOne(email);
 
     if (!user) {
-      throw new HttpException('Такой пользователь не найден', HttpStatus.NOT_FOUND);
+      throw new HttpException('Пользователь с таким e-mail не найден', 401);
     }
 
     const areEqual = await compare(password, user.passwordHash);
@@ -38,7 +38,10 @@ export class UsersService {
   }
 
   public async findOne(email: string): Promise<FromBaseUser | undefined> {
-    const found = await this.UserModel.findOne({email});
-    return found;
+    const user = await this.UserModel.findOne({email});
+    if (!user) {
+      throw new HttpException('Пользователь с таким e-mail не найден', 401);
+    }
+    return user;
   }
 }
