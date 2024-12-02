@@ -29,7 +29,7 @@ const AdminUsers = () => {
         const email = localStorage.getItem("email");
         if (email && token) {
           try {
-            await fetch(import.meta.env.VITE_ADMIN + 'users', {
+            fetch(import.meta.env.VITE_ADMIN + 'users', {
               method: 'GET',
               credentials: 'include',
               headers: {
@@ -88,32 +88,31 @@ const AdminUsers = () => {
           },
           body: JSON.stringify(dataToSend),
         })
-          .then(res => {
-            if (res.ok) {
-              setAddUser(false);
-              setReplyMessage('Пользователь успешно добавлен.')
+          .then(res => res.json())
+          .then(res => { console.log(res)
+            if (res.message) {
+              setReplyMessage(res.message);
               setTimeout(() => {
                 setReplyMessage('');
               }, 5000);
+            }
+            if (res.statusCode !== 400) {
+              setEmail('');
+              setPassword('');
+              setRole('');
+              setName('');
+              setPhone('');
+              setPasswordConf('');
             }
           })
           .catch(e => console.log('Catch error: ' + e));
       } catch (e) {
         console.log('Catch from try: ' + e);
       }
-    }/*
+    }
     setTimeout(() => {
       setAddUser(false);
-    }, 100);*/
-    
-    setEmail('');
-    setPassword('');
-    setRole('');
-    setName('');
-    setPhone('');
-    setPasswordConf('');
-
-
+    }, 100);
   }
 
   const inputStateHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

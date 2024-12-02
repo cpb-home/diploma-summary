@@ -14,12 +14,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
         status = exception.getStatus();
         message = exception.message;
       } else if (typeof exception === 'string') {
-        // Здесь можно добавить обработку ошибки 11000
+        
         if (exception.includes('E11000')) {
           status = HttpStatus.CONFLICT;
           message = 'Такой пользователь уже существует.';
         } else {
-          console.error(exception); // Логи ошибки
+          console.error(exception);
           status = HttpStatus.INTERNAL_SERVER_ERROR;
           message = 'Внутренняя ошибка сервера';
         }

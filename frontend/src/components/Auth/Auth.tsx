@@ -18,7 +18,7 @@ const Auth = () => {
       password,
     };
     try {
-      await fetch(import.meta.env.VITE_AUTH + 'login', {
+      fetch(import.meta.env.VITE_AUTH + 'login', {
         method: 'POST',
         credentials: 'include',
         headers: {

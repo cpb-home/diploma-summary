@@ -126,7 +126,7 @@ const HeaderAccount = () => {
           }
 
 {/* для всех */}
-          {<Link className="header__account__submenuItem" to={'/account/'} state={{page: 'account'}}>Аккаунт</Link>}
+          {<Link className="header__account__submenuItem" to={'/account/'} state={{page: 'account'}}>Кабинет</Link>}
           {<Link className="header__account__submenuItem" to={'/account/'} onClick={logOutHandler}>Выход</Link>}
         </div>
       </div>

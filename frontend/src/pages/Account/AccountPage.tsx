@@ -52,7 +52,7 @@ const AccountPage = () => {
 
     <div className="container">
       <div className="account__cont">
-        <h1>Аккаунт</h1>
+        <h1>Личный кабинет</h1>
         {!currentUser.isAuthenticated && state.page === 'account' && <Auth />}
         {!currentUser.isAuthenticated && state.page === 'register' && <Register />}
 
