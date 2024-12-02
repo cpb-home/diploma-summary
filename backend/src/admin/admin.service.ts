@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { genSalt, hash } from 'bcrypt';
 import { Connection, Model } from 'mongoose';
-import { toUserDto } from 'src/functions/toUserDto';
+import { toUserDto } from 'src/functions/toDtoFormat';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
 import { CreateRoomDto } from 'src/interfaces/dto/create-room';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
@@ -28,10 +28,7 @@ export class AdminService {
       throw new HttpException('Такой пользователь уже существует', 400)
     }
     const salt = await genSalt(10);
-    const passwordHash = await hash(data.passwordHash, salt);
-
-    //const user = new this.UserModel(data);
-    //const result = await user.save();
+    const passwordHash = await hash(data.password, salt);
 
     const user = new this.UserModel({
       email: data.email,
@@ -46,7 +43,7 @@ export class AdminService {
     return toUserDto(result);
   }
 
-  public async getAllUsers(): Promise<UserDocument[]> {
+  public async getAllUsers(): Promise<FromBaseUser[]> {
     return await this.UserModel.find().exec();
   }
 
@@ -59,6 +56,10 @@ export class AdminService {
 
   public deleteUser(id: string): Promise<UserDocument> {
     return this.UserModel.findOneAndDelete({ _id: id });
+  }
+
+  public async getUserInfo(email: string): Promise<FromBaseUser> {
+    return this.UserModel.findOne({email});
   }
 
 

@@ -12,11 +12,11 @@ const Auth = () => {
   const navigate = useNavigate();
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); console.log(1);
+    e.preventDefault();
     const dataToSend = {
       email,
       password,
-    }; console.log(2);
+    };
     try {
       await fetch(import.meta.env.VITE_AUTH + 'login', {
         method: 'POST',
@@ -27,12 +27,14 @@ const Auth = () => {
         body: JSON.stringify(dataToSend),
       })
         .then(res => res.json())
-        .then(res => {console.log(3)
+        .then(res => {
           if (res.email && res.role && res.accessToken) {
             dispatch(setCurrentUser({email: res.email, role: res.role}));
             localStorage.setItem('accessToken', res.accessToken);
             localStorage.setItem('email', res.email);
-            navigate('/account/')
+            setEmail('');
+            setPassword('');
+            navigate('/account/', { state: {page: 'account'} });
           }
           if (res.message) {
             console.log(`Message: ${res.message}`)

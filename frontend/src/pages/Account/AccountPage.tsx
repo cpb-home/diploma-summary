@@ -4,11 +4,15 @@ import Auth from "../../components/Auth/Auth"
 import { isTokenValid } from "../../assets/isTokenValid";
 import { clearCurrentUser, setCurrentUser } from "../../redux/slices/currentUser";
 import { useAppDispatch, useAppSelector } from "../../components/hooks";
-//import Register from "../../components/Register/Register"
+import { useLocation, useNavigate } from "react-router-dom";
+import Register from "../../components/Register/Register"
+import AdminUsers from "../../components/AdminUsers/AdminUsers";
 
 const AccountPage = () => {
   const currentUser = useAppSelector(state => state.currentUser);
+  const { state } = useLocation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function checkToken() {
@@ -38,6 +42,7 @@ const AccountPage = () => {
         }
       } else {
         dispatch(clearCurrentUser());
+        navigate('/account/', { state: {page: 'account'} })
       }
     }
     checkToken();
@@ -48,9 +53,11 @@ const AccountPage = () => {
     <div className="container">
       <div className="account__cont">
         <h1>Аккаунт</h1>
-        {!currentUser.isAuthenticated && <Auth />}
-        {/*<Register />*/}
-        {currentUser.isAuthenticated && <Account />}
+        {!currentUser.isAuthenticated && state.page === 'account' && <Auth />}
+        {!currentUser.isAuthenticated && state.page === 'register' && <Register />}
+
+        {currentUser.isAuthenticated && state.page === 'account' && <Account />}
+        {currentUser.isAuthenticated && state.page === 'users' && <AdminUsers />}
       </div>
     </div>
   )

@@ -6,7 +6,6 @@ export async function isTokenValid(): Promise<boolean> {
       return false;
     }
 
-    // Отправляем GET-запрос на защищенный маршрут сервера
     const response = await fetch(import.meta.env.VITE_AUTH + "protected", {
       method: "GET",
       headers: {
@@ -15,13 +14,25 @@ export async function isTokenValid(): Promise<boolean> {
     });
 
     if (email && response.ok) {
+      
+          const base64Url = token.split('.')[1];
+          const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Преобразуем URL-safe Base64 обратно в стандартный Base64
+          const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+          }).join(''));
+
+          const { exp } = JSON.parse(jsonPayload); // Получаем значение времени истечения срока действия
+
+          // Проверяем, истек ли срок действия токена
+          console.log('До истечения токена: ' + ((exp - Math.floor(Date.now() / 1000)) / 60).toFixed(1) + 'мин');
+      
       return true;
     } else {
       console.log("токен не валиден");
       localStorage.removeItem("accessToken");
       localStorage.removeItem("email");
 
-      return false; // Сервер вернул ошибку, токен недействителен
+      return false;
     }
   } catch (error) {
     console.error("Ошибка при проверке токена:", error);

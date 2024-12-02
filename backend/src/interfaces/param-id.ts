@@ -12,3 +12,7 @@ export interface IDates {
   startDate: Date;
   finDate: Date;
 }
+
+export interface IparamEmail {
+  email: string;
+}

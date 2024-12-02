@@ -1,13 +1,17 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { HotelDocument } from 'src/schemas/hotel.schema';
 import { CommonService } from './common.service';
 import { MessageDocument } from 'src/schemas/message.schema';
 import { CreateMessageDto } from 'src/interfaces/dto/create-message';
 import { HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
-import { IDates, IparamId, IparamIdWithDates } from 'src/interfaces/param-id';
+import { IDates, IparamEmail, IparamId, IparamIdWithDates } from 'src/interfaces/param-id';
 import { IHotelsListItem, IHotelsListItemForFront, IRoomListItemForFront } from 'src/interfaces/param-hotelsWithRooms';
 import { Types } from 'mongoose';
 import makeRoomWithHotelInfo from 'src/functions/makeRoomWithHotelInfo';
+import { UserDto } from 'src/interfaces/dto/user.dto';
+import { FromBaseUser } from 'src/interfaces/fromBaseUser';
+import { toUserDto } from 'src/functions/toDtoFormat';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @Controller('/api/common')
 export class CommonController {
@@ -63,6 +67,13 @@ export class CommonController {
       }
 
     return sendHotelRoomsList;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/user/:email')
+  public async getUserInfo(@Param() { email }: IparamEmail): Promise<UserDto> {
+    const user: FromBaseUser = await this.commonService.getUserInfo(email);
+    return toUserDto(user);
   }
 
 

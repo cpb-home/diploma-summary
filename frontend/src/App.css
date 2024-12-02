@@ -3,8 +3,9 @@
   --main-color-MiddleBlue: #233e96;
   --main-color-LightBlue: #829cf3;
   --main-color-Grey: grey;
-  --mail-color-red: red;
+  --main-color-red: red;
   --main-color-green: green;
+  --main-color-violet: rgb(190, 19, 190);
   
   --main-fontColor-white: white;
   --main-fontColor-gold: gold;
@@ -33,7 +34,7 @@ h1, h2, h3 {
 }
 
 .red {
-  color: var(--mail-color-red);
+  color: var(--main-color-red);
 }
 
 .green {
@@ -44,7 +45,7 @@ h1, h2, h3 {
   font-weight: 700;
 }
 
-.inputLabel {
+.inputLabel, .inputLabel__select {
   font-size: 16px;
   font-weight: bold;
   display: flex;
@@ -55,14 +56,19 @@ h1, h2, h3 {
   display: block;
   text-align: left;
 }
+
 .inputLabel:first-letter {
   text-transform: uppercase;
 }
 
-.inputLabel input {
+.inputLabel input, .inputLabel__select select {
   font-size: 16px;
   color: var(--main-color-DarkBlue);
   padding: 2px;
+}
+
+.inputLabel__select select {
+  width: 200px;
 }
 
 
@@ -115,6 +121,10 @@ h1, h2, h3 {
 .header__menu-link {
   color: var(--main-color-LightBlue);
   text-decoration: none;
+
+  &:hover {
+    color: var(--main-fontColor-white);
+  }
 }
 
 .header__menu-link-active {
@@ -159,7 +169,8 @@ h1, h2, h3 {
   padding: 5px 20px;
 
   &:hover {
-    color: var(--main-color-LightBlue);
+    color: var(--main-color-DarkBlue);
+    background-color: var(--main-color-LightBlue);
   }
 }
 
@@ -172,7 +183,7 @@ h1, h2, h3 {
   min-height: calc(100vh - 140px);
 }
 
-.main__cont, .search__cont, .account__cont {
+.main__cont, .search__cont, .account__cont, .userslist__cont {
   padding-top: 20px;
   display: flex;
   flex-direction: column;
@@ -369,6 +380,50 @@ h1, h2, h3 {
   width: 100%;
 }
 
+.info__table {
+  width: 80%;
+  margin: 50px auto 10px;
+  font-size: 18px;
+}
+
+.info__table-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 0 auto;
+}
+
+.info__table-cell {
+  padding: 5px 10px;
+  text-align: left;
+  width: 50%;
+
+  &:nth-child(odd) {
+    text-align: right;
+    font-weight: bold;
+  }
+}
+
+.addUserBtn__cont {
+  margin: 0 auto;
+  text-align: right;
+  width: 100%;
+  padding: 0 20px;
+  margin: -60px 0 -10px;
+}
+
+.addUser__form-message {
+  height: 20px;
+  color: var(--main-color-red);
+  font-weight: bold;
+}
+
+.addUser__message {
+  height: 20px;
+  color: var(--main-color-violet);
+  font-weight: bold;
+}
 
 
 

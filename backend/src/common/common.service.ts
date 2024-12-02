@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
+import { FromBaseUser } from 'src/interfaces/fromBaseUser';
 import { Hotel, HotelDocument } from 'src/schemas/hotel.schema';
 import { HotelRoom, HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
@@ -41,6 +42,10 @@ export class CommonService {
     const rooms = await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
     return rooms;
     //return await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
+  }
+
+  public async getUserInfo(email: string): Promise<FromBaseUser> {
+    return this.UserModel.findOne({email});
   }
 
 

@@ -35,7 +35,7 @@ export interface IRoomListItem {
 
 export interface IHotelShortInfo {
   _id: string;
-  title: string,
+  title: string;
   description?: string;
 }
 
@@ -43,4 +43,11 @@ export interface ICurrentUser {
   email: string | null;
   role: string | null;
   isAuthenticated: boolean;
+}
+
+export interface IUserInfo {
+  email: string;
+  name: string;
+  role: string;
+  contactPhone?: string;
 }
