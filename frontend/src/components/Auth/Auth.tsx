@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Button from "../../ui/Button"
 import Input from "../../ui/Input"
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { setCurrentUser } from "../../redux/slices/currentUser";
 import { useNavigate } from "react-router-dom";
 
@@ -10,6 +10,13 @@ const Auth = () => {
   const [password, setPassword] = useState<string>('');
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const currentUser = useAppSelector(state => state.currentUser);
+
+  useEffect(() => {
+    if (currentUser.isAuthenticated) {
+      navigate('/account/', { state: {page: 'account'} })
+    }
+  }, [currentUser, navigate]);
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -29,9 +36,9 @@ const Auth = () => {
         .then(res => res.json())
         .then(res => {
           if (res.email && res.role && res.accessToken) {
-            dispatch(setCurrentUser({email: res.email, role: res.role}));
+            dispatch(setCurrentUser({email: res.email, role: res.role, id: res.id}));
             localStorage.setItem('accessToken', res.accessToken);
-            localStorage.setItem('email', res.email);
+            localStorage.setItem('userId', res.id);
             setEmail('');
             setPassword('');
             navigate('/account/', { state: {page: 'account'} });

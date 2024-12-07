@@ -7,6 +7,8 @@ import SearchHotelPage from './pages/SearchHotelPage/SearchHotelPage'
 import ChatPage from './pages/ChatPage/ChatPage'
 import BookPage from './pages/BookPage/BookPage'
 import AccountPage from './pages/Account/AccountPage'
+import ChangePage from './pages/ChangePage/ChangePage'
+import CreatePage from './pages/CreatePage/CreatePage'
 
 function App() {
 
@@ -19,6 +21,8 @@ function App() {
         <Route path='/search/room/' element={<BookPage />} />
         <Route path='/support/' element={<ChatPage />} />
         <Route path='/account/' element={<AccountPage />} />
+        <Route path='/change/' element={<ChangePage />} />
+        <Route path='/add/' element={<CreatePage />} />
 
         <Route path='*' element={<NotFoundPage />} />
       </Route>

@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 export class CommonController {
   constructor (private readonly commonService: CommonService) {}
 
-  @Get('/hotels') //COMMON_HOTELS_LIST = все гостиницы
+  @Get('/hotels') // все гостиницы
   public async getAllHotels(): Promise<IHotelsListItemForFront[]> {
     const allHotels = await this.commonService.getAllHotels();
     const allHotelsForFront: IHotelsListItemForFront[] = [];
@@ -34,7 +34,7 @@ export class CommonController {
     return allHotelsForFront;
   }
 
-  @Get('/hotel-rooms/:startDate/:finDate') //COMMON_ROOMS_LIST = все номера. Включены все номера, которые isEnabled
+  @Get('/hotel-rooms/:startDate/:finDate') // все номера. Включены все номера, которые isEnabled
   public async getAllRooms(@Param() { startDate, finDate }: IDates): Promise<IRoomListItemForFront[]> {
     const sendRoomsList: IRoomListItemForFront[] = [];
     const allRooms = await this.commonService.getAllRooms(startDate, finDate);
@@ -46,7 +46,7 @@ export class CommonController {
     return sendRoomsList;
   }
 
-  @Get('/hotel-rooms/:id') // VITE_COMMON_ROOM_INFO = инфо о номере. 
+  @Get('/hotel-rooms/:id') // инфо о номере. 
   public async getRoomInfo(@Param() { id }: IparamId): Promise<IRoomListItemForFront> {
     const idObjectId = new Types.ObjectId(id);
     const currentRoom = await this.commonService.getRoomInfo(idObjectId);
@@ -56,7 +56,17 @@ export class CommonController {
     return null;
   }
 
-  @Get('/hotels/:id/rooms/:startDate/:finDate') //COMMON_HOTEL_ROOMS_LIST
+  @Get('/hotel/:id') // инфо о гостинице. 
+  public async getHotelInfo(@Param() { id }: IparamId): Promise<IHotelsListItemForFront> {
+    const idObjectId = new Types.ObjectId(id);
+    const currentHotel = await this.commonService.getHotelInfo(idObjectId);
+    if (currentHotel) {
+      return {id: currentHotel._id, title: currentHotel.title, description: currentHotel.description};
+    }
+    return null;
+  }
+
+  @Get('/hotels/:id/rooms/:startDate/:finDate') //
   public async getAvailableRoomsForHotel(@Param() { id, startDate, finDate }: IparamIdWithDates): Promise<IRoomListItemForFront[]> {
     const idObjectId = new Types.ObjectId(id);
     const hotelRooms = await this.commonService.getAvailableRoomsForHotel(idObjectId, startDate, finDate);
@@ -70,9 +80,10 @@ export class CommonController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('/user/:email')
-  public async getUserInfo(@Param() { email }: IparamEmail): Promise<UserDto> {
-    const user: FromBaseUser = await this.commonService.getUserInfo(email);
+  @Get('/user/:id')
+  public async getUserInfo(@Param() { id }: IparamId): Promise<UserDto> {
+    const idObjectId = new Types.ObjectId(id);
+    const user: FromBaseUser = await this.commonService.getUserInfo(idObjectId);
     return toUserDto(user);
   }
 

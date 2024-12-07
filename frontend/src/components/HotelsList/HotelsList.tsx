@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { fetchHotels } from "../../redux/slices/hotelsList";
 import Pagination from "../Pagination/Pagination";
-import { Link } from "react-router-dom";
 import HotelListItem from "../HotelListItem/HotelListItem";
 
 const ITEMS_PER_PAGE = 5;
@@ -41,12 +40,8 @@ const HotelsList = () => {
           !hotelsList.loading ? 
             hotelsList.hotels.length !== 0 ?  
               <div className="hotelsList__list">
-                { 
-                  sortedHotels.map((e, i) => 
-                    <Link className="hotelList__link" key={i} to={`/hotels/search/`} state={{hotelId: e.id}}>
-                      <HotelListItem title={e.title} description={e.description} id={e.id} />
-                    </Link>
-                  )
+                {sortedHotels.map((e, i) => 
+                  <HotelListItem title={e.title} description={e.description} id={e.id} key={i} />)
                 }
               </div> : 
             hotelsList.error ? hotelsList.error : 'Пока в базе нет гостиниц. Заходите попозже.'

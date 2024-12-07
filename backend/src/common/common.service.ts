@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { Connection, Model, Types } from 'mongoose';
+import { FromBaseHotel } from 'src/interfaces/fromBaseHotel';
 import { FromBaseUser } from 'src/interfaces/fromBaseUser';
 import { Hotel, HotelDocument } from 'src/schemas/hotel.schema';
 import { HotelRoom, HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
@@ -15,11 +16,11 @@ export class CommonService {
     @InjectConnection() private connection: Connection,
   ) {}
 
-  public async getAllHotels(): Promise<HotelDocument[]> {
-    return await this.HotelModel.find().exec();
+  public async getAllHotels(): Promise<FromBaseHotel[]> {
+    return await this.HotelModel.find();
   }
 
-  public async getHotelInfo(id: Types.ObjectId): Promise<HotelDocument> {
+  public async getHotelInfo(id: Types.ObjectId): Promise<FromBaseHotel> {
     return await this.HotelModel.findOne({_id: id});
   }
 
@@ -44,8 +45,8 @@ export class CommonService {
     //return await this.HotelRoomModel.find({hotel: hotelId, isEnabled: true});
   }
 
-  public async getUserInfo(email: string): Promise<FromBaseUser> {
-    return this.UserModel.findOne({email});
+  public async getUserInfo(id: Types.ObjectId): Promise<FromBaseUser> {
+    return await this.UserModel.findOne({_id: id});
   }
 
 

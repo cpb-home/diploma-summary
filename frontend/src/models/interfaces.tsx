@@ -41,13 +41,20 @@ export interface IHotelShortInfo {
 
 export interface ICurrentUser {
   email: string | null;
+  id: string | null;
   role: string | null;
   isAuthenticated: boolean;
 }
 
 export interface IUserInfo {
+  id?: string;
   email: string;
   name: string;
   role: string;
   contactPhone?: string;
+}
+
+export interface IChangePage {
+  itemType: string;
+  id: string;
 }

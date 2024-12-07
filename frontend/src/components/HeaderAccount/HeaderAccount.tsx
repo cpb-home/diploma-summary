@@ -1,8 +1,8 @@
 import { MouseEventHandler, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { isTokenValid } from "../../assets/isTokenValid";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { clearCurrentUser, setCurrentUser } from "../../redux/slices/currentUser";
+import { clearCurrentUser } from "../../redux/slices/currentUser";
+import { isTokenValid } from "../../assets/isTokenValid";
 
 const HeaderAccount = () => {
   const currentUser = useAppSelector(state => state.currentUser);
@@ -10,44 +10,21 @@ const HeaderAccount = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function checkToken() {
-      if (await isTokenValid()) {
-        const token = localStorage.getItem("accessToken");
-        const email = localStorage.getItem("email");
-        if (email && token) {
-          try {
-            fetch(import.meta.env.VITE_AUTH + 'getrole', {
-              method: 'POST',
-              credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({email: email}),
-            })
-              .then(res => res.json())
-              .then(res => {
-                if (email && res.role) {
-                  dispatch(setCurrentUser({email, role: res.role}))
-                }
-              })
-          } catch (e) {
-            console.log(e);
-          }
-        }
-      } else {
+    isTokenValid().then(res => {
+      if (!res) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
         dispatch(clearCurrentUser());
       }
-    }
-    checkToken();
-  }, []);
+    })
+  }, [dispatch]);
 
   const logOutHandler: MouseEventHandler<HTMLAnchorElement> = async (event) => {
     event.preventDefault();
 
     dispatch(clearCurrentUser());
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
     navigate('/account/', { state: {page: 'account'} })
   };
 
@@ -59,16 +36,15 @@ const HeaderAccount = () => {
           {(currentUser.role === 'admin' || currentUser.role === 'mainAdmin') 
             && <Link 
               className="header__account__submenuItem" 
-              to={'/'} 
-              state={{page: 'hotels'}}>
+              to={'/'}>
                 Гостиницы
             </Link>
           }
           {(currentUser.role === 'admin' || currentUser.role === 'mainAdmin')
             && <Link 
               className="header__account__submenuItem" 
-              to={'/'} 
-              state={{page: 'rooms'}}>
+              to={'/hotels/search/'}
+              state={{hotelId: ''}} >
                 Номера
             </Link>
           }

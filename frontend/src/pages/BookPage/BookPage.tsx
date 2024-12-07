@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IRoomListItem } from "../../models/interfaces";
 import Button from "../../ui/Button";
+import { useAppDispatch, useAppSelector } from "../../components/hooks";
+import { isTokenValid } from "../../assets/isTokenValid";
+import { clearCurrentUser, setCurrentUser } from "../../redux/slices/currentUser";
+import { getCurrentUser } from "../../assets/getCurrentUser";
 
 const BookPage = () => {
   const { state } = useLocation();
@@ -9,12 +13,33 @@ const BookPage = () => {
   const [room, setRoom] = useState<IRoomListItem | null>(null);
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const currentUser = useAppSelector(state => state.currentUser);
+  const dispatch = useAppDispatch();
 
   const updatedStartDate = new Date(startDate);
   const updatedFinDate = new Date(finDate);
-  const dateDiff = finDate - startDate; console.log(dateDiff)
+  const dateDiff = (updatedFinDate.getTime() - updatedStartDate.getTime())/1000/60/60/24;
 
   useEffect(() => {
+    isTokenValid().then(res => {
+      if (!res) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
+        dispatch(clearCurrentUser());
+      } else {
+        getCurrentUser().then(res => {
+          try {
+            dispatch(setCurrentUser({email: res?.email, role: res?.role, id: res?.id, contactPhone: res?.contactPhone, name: res?.name}))
+          } catch {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('userId');
+            dispatch(clearCurrentUser());
+          }
+        })
+      }
+    })
+
     if (roomId) {
       setLoading(true);
       fetch(import.meta.env.VITE_COMMON + 'hotel-rooms/' + roomId)
@@ -26,10 +51,18 @@ const BookPage = () => {
         })
         .catch(e => setError(e.message))
     }
-  }, [roomId]);
+  }, [roomId, currentUser, navigate, dispatch]);
 
   const bookHandler = () => {
-    console.log(roomId);
+    isTokenValid().then(res => {
+      if (!res) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
+        dispatch(clearCurrentUser());
+      } else {
+        console.log(roomId);
+      }
+    })
   }
 
   return (
@@ -52,11 +85,11 @@ const BookPage = () => {
               </div>
               { startDate && finDate &&
                 <div className="search__roomDatesInfo">
-                  <span className="bold">Выбранные даты: </span><br />Заезд: {updatedStartDate.toLocaleDateString()}<br />Выезд {updatedFinDate.toLocaleDateString()}<br />Всего ночей: {}
+                  <span className="bold">Выбранные даты: </span><br />Заезд: {updatedStartDate.toLocaleDateString()}. Выезд {updatedFinDate.toLocaleDateString()}. Всего ночей: {dateDiff}
                 </div>
               }
-              { startDate && finDate &&
-                <Button text="Забронировать" type="button" handler={bookHandler} />
+              { startDate && finDate && 
+                (currentUser.isAuthenticated ? <Button text="Забронировать" type="button" handler={bookHandler} /> : <Link to={`/account/`} state={{page: 'account'}}>Вы не авторизованы. Авторизуйтесь, чтобы забронировать номер.</Link>)
               }
             </div>
           : 'Нет данных о номере'

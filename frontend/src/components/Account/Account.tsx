@@ -12,10 +12,10 @@ const Account = () => {
     async function checkToken() {
       if (await isTokenValid()) {
         const token = localStorage.getItem("accessToken");
-        const email = localStorage.getItem("email");
-        if (email && token) {
+        const id = localStorage.getItem("userId");
+        if (id && token) {
           try {
-            fetch(import.meta.env.VITE_COMMON + 'user/' + email, {
+            fetch(import.meta.env.VITE_COMMON + 'user/' + id, {
               method: 'GET',
               credentials: 'include',
               headers: {

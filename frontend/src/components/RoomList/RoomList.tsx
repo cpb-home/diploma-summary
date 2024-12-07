@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react"
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { fetchRooms } from "../../redux/slices/roomsList";
 import Pagination from "../Pagination/Pagination";
 import RoomListItem from "../RoomListItem/RoomListItem";
+import Button from "../../ui/Button";
 
 interface ISearchStateProps {
   startDate: Date | null;
@@ -19,6 +20,8 @@ const RoomList = (props: ISearchStateProps) => {
   const roomsList = useAppSelector(state => state.roomsList);
   const dispatch = useAppDispatch();
   const [page, setPage] = useState(1);
+  const currentUser = useAppSelector(state => state.currentUser);
+  const navigate = useNavigate();
 
   //const sortedRooms = [...roomsList.rooms];
   const sortedRooms = [...roomsList.rooms].slice((page - 1) * ITEMS_PER_PAGE, ITEMS_PER_PAGE*page);
@@ -54,6 +57,10 @@ const RoomList = (props: ISearchStateProps) => {
     setPage(prev > 0 ? prev : current);
   }, [page]);
 
+  const changeRoomHandler = (id: string) => {
+    navigate('/change/', {state: {id, itemType: 'hotel-rooms'}});
+  }
+
   return (
     <section className="roomsList__section">
       <div>
@@ -64,12 +71,28 @@ const RoomList = (props: ISearchStateProps) => {
                 {
                   sortedRooms.map((e, i) =>
                     startDate && finDate ? 
-                      <Link className="roomsList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
-                        <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
-                      </Link>
-                    : <div className="roomList__notAlink" key={i}>
-                        <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
-                      </div>
+                      <>
+                        <Link className="roomsList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
+                          <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
+                        </Link>
+                        {currentUser.isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && 
+                        <div className="hotelsList__item-adminCont">
+                          <Button text="Изменить" type="button" handler={() => changeRoomHandler(e.id)} />
+                        </div>
+                        }
+                      </>
+                    : 
+                      <>
+                        <div className="roomList__notAlink" key={i}>
+                          <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
+                        </div>
+                        {currentUser.isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && 
+                          <div className="hotelsList__item-adminCont">
+                            <Button text="Изменить" type="button" handler={() => changeRoomHandler(e.id)} />
+                          </div>
+                        }
+                      </>
+
                   )
                 }
               </div> :

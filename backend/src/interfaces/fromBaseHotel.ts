@@ -2,7 +2,7 @@ import { IsDate, IsNotEmpty, IsOptional } from "class-validator";
 
 export class FromBaseHotel {
   @IsNotEmpty()
-  _id: string | unknown;
+  _id: string;
 
   @IsNotEmpty()
   title: string;

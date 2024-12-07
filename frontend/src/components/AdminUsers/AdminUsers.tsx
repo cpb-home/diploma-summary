@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { isTokenValid } from "../../assets/isTokenValid";
-import { useAppDispatch } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
 import { clearCurrentUser } from "../../redux/slices/currentUser";
 import { IUserInfo } from "../../models/interfaces";
 import { useNavigate } from "react-router-dom";
@@ -21,13 +21,13 @@ const AdminUsers = () => {
   const [phone, setPhone] = useState<string>('');
   const [message, setMessage] = useState<string>('');
   const [replyMessage, setReplyMessage] = useState<string>('');
+  const currentUser = useAppSelector(state => state.currentUser);
 
   useEffect(() => {
     async function checkToken() {
       if (await isTokenValid()) {
         const token = localStorage.getItem("accessToken");
-        const email = localStorage.getItem("email");
-        if (email && token) {
+        if (currentUser.isAuthenticated && token) {
           try {
             fetch(import.meta.env.VITE_ADMIN + 'users', {
               method: 'GET',
@@ -59,7 +59,7 @@ const AdminUsers = () => {
     } else {
       setMessage('');
     }
-  }, [addUser, passwordConf]);
+  }, [addUser, passwordConf, currentUser, password, dispatch, navigate]);
 
   const addUserHandler = () => {
     setAddUser(true);
@@ -89,7 +89,7 @@ const AdminUsers = () => {
           body: JSON.stringify(dataToSend),
         })
           .then(res => res.json())
-          .then(res => { console.log(res)
+          .then(res => {
             if (res.message) {
               setReplyMessage(res.message);
               setTimeout(() => {

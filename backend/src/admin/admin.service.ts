@@ -1,12 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { genSalt, hash } from 'bcrypt';
-import { Connection, Model } from 'mongoose';
+import { Connection, Model, Types } from 'mongoose';
 import { toUserDto } from 'src/functions/toDtoFormat';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
 import { CreateRoomDto } from 'src/interfaces/dto/create-room';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
 import { UpdateHotelDto } from 'src/interfaces/dto/update-hotel';
+import { UpdateRoomDto } from 'src/interfaces/dto/update-room';
 import { UpdateUserDto } from 'src/interfaces/dto/update-user';
 import { UserDto } from 'src/interfaces/dto/user.dto';
 import { FromBaseUser } from 'src/interfaces/fromBaseUser';
@@ -64,24 +65,25 @@ export class AdminService {
 
 
 
-  public createHotel(data: CreateHotelDto): Promise<HotelDocument> {
+  public async createHotel(data: CreateHotelDto): Promise<HotelDocument> {
     
     const hotel = new this.HotelModel(data);
     hotel.createdAt = new Date();
     hotel.updatedAt = new Date();
 
-    return hotel.save();
+    return await hotel.save();
   }
 
   public getAllHotels(): Promise<HotelDocument[]> {
     return this.HotelModel.find().exec();
   }
 
-  public updateHotel(id: string, data: UpdateHotelDto): Promise<HotelDocument> {
-    return this.HotelModel.findOneAndUpdate(
+  public async updateHotel(id: Types.ObjectId, data: UpdateHotelDto): Promise<HotelDocument> {
+    const hotel = await this.HotelModel.findOneAndUpdate(
       { _id: id },
-      data,
+      { $set: {description: data.description, updatedAt: new Date()} },
     );
+    return hotel;
   }
 
   public deleteHotel(id: string): Promise<HotelDocument> {
@@ -96,7 +98,11 @@ export class AdminService {
     return result;
   }
 
-  public updateRoomInfo() {
-
+  public async updateRoom(id: Types.ObjectId, data: UpdateRoomDto): Promise<HotelRoomDocument> {
+    const room = await this.HotelRoomModel.findOneAndUpdate(
+      { _id: id },
+      { $set: {description: data.description, updatedAt: new Date()} },
+    );
+    return room;
   }
 }

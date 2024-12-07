@@ -12,6 +12,9 @@ import { toUserDto } from 'src/functions/toDtoFormat';
 import { FromBaseHotel } from 'src/interfaces/fromBaseHotel';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
+import { UpdateHotelDto } from 'src/interfaces/dto/update-hotel';
+import { Types } from 'mongoose';
+import { UpdateRoomDto } from 'src/interfaces/dto/update-room';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -93,11 +96,14 @@ export class AdminController {
   */
 
   @Put('/hotels/:id')
-  public updateHotel(
+  public async updateHotel(
     @Param() { id }: IparamId,
-    @Body() body: UpdateUserDto,
-  ): Promise<UserDocument> {
-    return this.adminService.updateUser(id, body);
+    @Body() body: UpdateHotelDto,
+  ): Promise<ReplyMessageDto> {
+    if (await this.adminService.updateHotel(new Types.ObjectId(id), body)) {
+      return { message: 'Гостиница успешно обновлена' };
+    }
+    return { message: 'Не удалось обновить гостиницу' };
   }
   /*
     1. 401 - если пользователь не авторизован
@@ -126,11 +132,14 @@ export class AdminController {
   */
 
   @Put('/hotel-rooms/:id')
-  public updateRoom(
+  public async updateRoom(
     @Param() { id }: IparamId,
-    @Body() body: UpdateUserDto,
-  ): Promise<UserDocument> {
-    return this.adminService.updateUser(id, body);
+    @Body() body: UpdateRoomDto,
+  ): Promise<ReplyMessageDto> {
+    if (await this.adminService.updateRoom(new Types.ObjectId(id), body)) {
+      return { message: 'Комната успешно обновлена' };
+    }
+    return { message: 'Не удалось обновить комнату' };
   }
   /*
     1. 401 - если пользователь не авторизован
