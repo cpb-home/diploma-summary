@@ -10,7 +10,7 @@ export class CreateRoomDto {
 
   @IsOptional()
   images?: string[];
-
+/*
   @IsNotEmpty()
   @IsDate()
   createdAt: Date;
@@ -21,5 +21,5 @@ export class CreateRoomDto {
 
   @IsNotEmpty()
   @IsBoolean()
-  isEnabled: Boolean;
+  isEnabled: Boolean;*/
 }

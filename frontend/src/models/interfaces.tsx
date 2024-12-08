@@ -58,3 +58,8 @@ export interface IChangePage {
   itemType: string;
   id: string;
 }
+
+export interface IAddPage {
+  itemType: string;
+  hotelId?: string;
+}

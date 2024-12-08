@@ -10,10 +10,14 @@ import { AuthService } from 'src/auth/auth.service';
 import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     UsersModule,
+    MulterModule.register({
+      dest: './uploads',
+    }),
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => {
         return {

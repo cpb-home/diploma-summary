@@ -9,10 +9,12 @@ interface IProps {
   value?: string;
   state?: string;
   setState: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  multiple?: boolean;
+  accept?: string;
 }
 
 const Input = (props: IProps) => {
-  const {text, type, name, required, disabled, maxLength, placeholder, value, setState} = props;
+  const {text, type, name, required, disabled, maxLength, placeholder, value, setState, multiple, accept} = props;
 
   return (
     <label className="inputLabel">
@@ -26,7 +28,10 @@ const Input = (props: IProps) => {
         maxLength={maxLength} 
         placeholder={placeholder} 
         value={value ? value : ''}
-        onChange={setState} />
+        onChange={setState}
+        multiple={multiple ? multiple : false}
+        accept={accept ? accept : '*/*'}
+      />
     </label>
   )
 }

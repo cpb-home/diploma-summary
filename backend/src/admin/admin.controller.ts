@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
 import { UserDocument } from 'src/schemas/user.schema';
@@ -15,6 +15,11 @@ import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { UpdateHotelDto } from 'src/interfaces/dto/update-hotel';
 import { Types } from 'mongoose';
 import { UpdateRoomDto } from 'src/interfaces/dto/update-room';
+import { diskStorage } from 'multer';
+import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInfo } from 'src/interfaces/file-info.interface';
+import { extname } from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -87,8 +92,11 @@ export class AdminController {
   }
 
   @Post('/hotels')
-  public createHotel(@Body() body: CreateHotelDto): Promise<HotelDocument> {
-    return this.adminService.createHotel(body);
+  public async createHotel(@Body() body: CreateHotelDto): Promise<ReplyMessageDto> {
+    if (await this.adminService.createHotel(body)) {
+      return { message: 'Гостиница успешно добавлена' };
+    }
+    return { message: 'Не удалось добавить гостиницу' };
   }
   /*
     1. 401 - если пользователь не авторизован
@@ -122,9 +130,29 @@ export class AdminController {
     return;
   }
 
-  @Post('/hotel-rooms')
-  public createRoom(@Body() body: CreateUserDto): Promise<UserDto> {
-    return this.adminService.createUser(body);
+  @Post('/hotel-rooms/:id')
+  @UseInterceptors(FilesInterceptor('file'))
+  public async createRoom(
+    @Body() body,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+    @Param() { id }: IparamId,): Promise<ReplyMessageDto> {
+    //console.log(files);
+    const images: string[] = [];
+
+    for (const file of files) {
+      const fileName = `${uuidv4()}${extname(file.originalname)}`;console.log(file.originalname, fileName, file.path);
+      await this.adminService.saveFile(file.path, fileName);
+      images.push(fileName);
+    }
+
+    console.log('images', images);
+
+    const create = await this.adminService.createRoom({hotel: new Types.ObjectId(id), description: body.description, images: images});
+
+    if (create) {
+      return { message: 'Номер успешно добавлен' };
+    }
+    return { message: 'Не удалось добавить номер' };
   }
   /*
     1. 401 - если пользователь не авторизован
@@ -151,3 +179,4 @@ export class AdminController {
     return this.adminService.deleteUser(id);
   }
 }
+

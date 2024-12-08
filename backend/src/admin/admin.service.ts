@@ -2,6 +2,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { genSalt, hash } from 'bcrypt';
 import { Connection, Model, Types } from 'mongoose';
+import { join } from 'path';
+import * as fs from 'fs/promises';
 import { toUserDto } from 'src/functions/toDtoFormat';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
 import { CreateRoomDto } from 'src/interfaces/dto/create-room';
@@ -93,6 +95,9 @@ export class AdminService {
 
   public async createRoom(data: CreateRoomDto): Promise<HotelRoomDocument> {
     const room = new this.HotelRoomModel(data);
+    room.createdAt = new Date();
+    room.updatedAt = new Date();
+    room.isEnabled = true;
     const result = await room.save();
 
     return result;
@@ -104,5 +109,10 @@ export class AdminService {
       { $set: {description: data.description, updatedAt: new Date()} },
     );
     return room;
+  }
+
+  async saveFile(tempPath: string, fileName: string): Promise<void> {
+    const uploadsDir = join(process.cwd(), 'uploads');
+    await fs.rename(tempPath, join(uploadsDir, fileName));
   }
 }

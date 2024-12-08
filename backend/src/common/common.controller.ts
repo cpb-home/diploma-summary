@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { HotelDocument } from 'src/schemas/hotel.schema';
 import { CommonService } from './common.service';
 import { MessageDocument } from 'src/schemas/message.schema';
@@ -12,6 +12,7 @@ import { UserDto } from 'src/interfaces/dto/user.dto';
 import { FromBaseUser } from 'src/interfaces/fromBaseUser';
 import { toUserDto } from 'src/functions/toDtoFormat';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { createReadStream } from 'fs';
 
 @Controller('/api/common')
 export class CommonController {
@@ -103,4 +104,10 @@ export class CommonController {
   public makeMessageRead(@Body() body: CreateMessageDto): Promise<MessageDocument> {
     return this.MessageService.createUser(body);
   }*/
+
+    @Get('/files/:filePath')
+    getFile(@Param('filePath') filePath: string, @Res() res) { console.log('reading');
+      const file = createReadStream(`./uploads/${filePath}`);
+      file.pipe(res);
+    }
 }

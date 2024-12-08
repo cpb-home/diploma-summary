@@ -8,7 +8,8 @@ const RoomListItem = ( props: IRoomListItem ) => {
     <div className="roomList__item">
       {images && images.length > 0 && 
         <div className="roomsList__item-imgCont">
-          <img src={images[0]} alt="room image" />
+          {images.map((e, i) => <img src={'http://localhost:3000/api/common/files/' + e} alt="room image" key={i} />)}
+          
         </div>
       }
       

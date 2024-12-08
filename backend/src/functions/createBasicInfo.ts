@@ -24,9 +24,6 @@ async function createRooms(adminService: AdminService, commonService: CommonServ
       const newRoom: CreateRoomDto = {
         hotel: new Types.ObjectId(hotel._id.toString()),
         description: description[Math.floor(Math.random() * 6)],
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        isEnabled: isEnabled[Math.floor(Math.random() * 2)]
       };
       
       await adminService.createRoom(newRoom);

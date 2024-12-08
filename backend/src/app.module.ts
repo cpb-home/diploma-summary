@@ -13,6 +13,7 @@ import { HotelRoom, HotelRoomSchema } from './schemas/hotelRoom.schema';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -26,6 +27,9 @@ import { AuthService } from './auth/auth.service';
       { name: Hotel.name, schema: HotelSchema },
       { name: HotelRoom.name, schema: HotelRoomSchema }
     ]),
+    MulterModule.register({
+      dest: './uploads',
+    }),
     AdminModule,
     CommonModule,
     AuthModule,
