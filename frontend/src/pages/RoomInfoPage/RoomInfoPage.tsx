@@ -7,7 +7,7 @@ import { isTokenValid } from "../../assets/isTokenValid";
 import { clearCurrentUser, setCurrentUser } from "../../redux/slices/currentUser";
 import { getCurrentUser } from "../../assets/getCurrentUser";
 
-const BookPage = () => {
+const RoomInfoPage = () => {
   const { state } = useLocation();
   const { roomId, startDate, finDate } = JSON.parse(state.data);
   const [room, setRoom] = useState<IRoomListItem | null>(null);
@@ -55,12 +55,42 @@ const BookPage = () => {
 
   const bookHandler = () => {
     isTokenValid().then(res => {
+      // теоретически, ПРОВЕРИТЬ ЕЩЕ РАЗ НЕ ЗАРЕГАН ЛИ НОМЕР.
       if (!res) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userId');
         dispatch(clearCurrentUser());
       } else {
-        console.log(roomId);
+        const token = localStorage.getItem("accessToken");
+        const data = {   
+        userId: currentUser.id,
+        hotelId: room?.hotel.id,
+        roomId: roomId,
+        dateStart: startDate,
+        dateEnd: finDate
+      }
+      
+      //const role = currentUser.role ?? '';
+      const role = 'client';
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+      headers.append('X-Roles', role);
+
+      fetch (import.meta.env.VITE_CLIENT + 'reservations', {
+        method: 'POST',
+        credentials: 'include',
+        headers,
+        body: JSON.stringify(data)
+      })
+      .then(res => res.json())
+        .then(res => {console.log(res);
+          if (res.statusCode !== 400) {
+            navigate('/bookings/', { state: {replyMessage: res.message} });
+          }
+        })
+        .catch(e => console.log('Catch error: ' + e));
       }
     })
   }
@@ -102,4 +132,4 @@ const BookPage = () => {
   )
 }
 
-export default BookPage
+export default RoomInfoPage

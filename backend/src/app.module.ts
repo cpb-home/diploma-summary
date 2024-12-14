@@ -14,6 +14,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { AuthService } from './auth/auth.service';
 import { MulterModule } from '@nestjs/platform-express';
+import { ClientModule } from './client/client.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MulterModule } from '@nestjs/platform-express';
     CommonModule,
     AuthModule,
     UsersModule,
+    ClientModule,
   ],
   controllers: [AppController, AdminController],
   providers: [AppService, AdminService, AuthService],

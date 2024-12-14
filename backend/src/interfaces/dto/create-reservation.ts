@@ -1,19 +1,19 @@
-import { IsNotEmpty } from "class-validator";
-import { ObjectId } from "mongoose";
+import { IsDate, IsNotEmpty } from "class-validator";
+import { Types } from "mongoose";
 
 export class CreateReservationDto {
   @IsNotEmpty()
-  userId: ObjectId;
+  userId: Types.ObjectId;
 
   @IsNotEmpty()
-  hotelId: ObjectId;
+  hotelId: Types.ObjectId;
 
   @IsNotEmpty()
-  roomId: ObjectId;
+  roomId: Types.ObjectId;
 
   @IsNotEmpty()
-  dateStart: Date;
+  dateStart: string;
 
   @IsNotEmpty()
-  dateEnd: Date;
+  dateEnd: string;
 }

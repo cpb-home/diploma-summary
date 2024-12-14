@@ -25,7 +25,7 @@ const HeaderAccount = () => {
     dispatch(clearCurrentUser());
     localStorage.removeItem('accessToken');
     localStorage.removeItem('userId');
-    navigate('/account/', { state: {page: 'account'} })
+    navigate('/account/', { state: {page: 'account'} });
   };
 
   if (currentUser.isAuthenticated) {
@@ -119,4 +119,4 @@ const HeaderAccount = () => {
   )
 }
 
-export default HeaderAccount
+export default HeaderAccount;

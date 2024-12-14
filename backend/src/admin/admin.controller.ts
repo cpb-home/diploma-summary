@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, Req, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
 import { UserDocument } from 'src/schemas/user.schema';
@@ -15,9 +15,7 @@ import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { UpdateHotelDto } from 'src/interfaces/dto/update-hotel';
 import { Types } from 'mongoose';
 import { UpdateRoomDto } from 'src/interfaces/dto/update-room';
-import { diskStorage } from 'multer';
-import { AnyFilesInterceptor, FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { FileInfo } from 'src/interfaces/file-info.interface';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -140,7 +138,7 @@ export class AdminController {
     const images: string[] = [];
 
     for (const file of files) {
-      const fileName = `${uuidv4()}${extname(file.originalname)}`;console.log(file.originalname, fileName, file.path);
+      const fileName = `${uuidv4()}${extname(file.originalname)}`;
       await this.adminService.saveFile(file.path, fileName);
       images.push(fileName);
     }

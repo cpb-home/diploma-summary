@@ -63,3 +63,17 @@ export interface IAddPage {
   itemType: string;
   hotelId?: string;
 }
+
+export interface IBookingsItem {
+  id: string;
+  starDate: Date;
+  endDate: Date;
+  hotelRoom: {
+    description: string;
+    images: string;
+  };
+  hotel: {
+    title: string;
+    description?: string;
+  }
+}

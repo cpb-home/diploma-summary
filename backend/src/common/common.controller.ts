@@ -1,9 +1,5 @@
 import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
-import { HotelDocument } from 'src/schemas/hotel.schema';
 import { CommonService } from './common.service';
-import { MessageDocument } from 'src/schemas/message.schema';
-import { CreateMessageDto } from 'src/interfaces/dto/create-message';
-import { HotelRoomDocument } from 'src/schemas/hotelRoom.schema';
 import { IDates, IparamEmail, IparamId, IparamIdWithDates } from 'src/interfaces/param-id';
 import { IHotelsListItem, IHotelsListItemForFront, IRoomListItemForFront } from 'src/interfaces/param-hotelsWithRooms';
 import { Types } from 'mongoose';

@@ -71,8 +71,8 @@ const RoomList = (props: ISearchStateProps) => {
                 {
                   sortedRooms.map((e, i) =>
                     startDate && finDate ? 
-                      <>
-                        <Link className="roomsList__link" key={i} to={`/search/room/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
+                      <div key={i}>
+                        <Link className="roomsList__link" to={`/room/info/`} state={{ data: JSON.stringify({roomId: e.id, startDate, finDate})}}>
                           <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
                         </Link>
                         {currentUser.isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && 
@@ -80,10 +80,10 @@ const RoomList = (props: ISearchStateProps) => {
                           <Button text="Изменить" type="button" handler={() => changeRoomHandler(e.id)} />
                         </div>
                         }
-                      </>
+                      </div>
                     : 
-                      <>
-                        <div className="roomList__notAlink" key={i}>
+                      <div key={i}>
+                        <div className="roomList__notAlink">
                           <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
                         </div>
                         {currentUser.isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && 
@@ -91,7 +91,7 @@ const RoomList = (props: ISearchStateProps) => {
                             <Button text="Изменить" type="button" handler={() => changeRoomHandler(e.id)} />
                           </div>
                         }
-                      </>
+                      </div>
 
                   )
                 }

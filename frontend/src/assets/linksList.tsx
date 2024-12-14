@@ -17,6 +17,7 @@ export const mainMenuItems = [
   { text: 'Гостиницы', link: '/', rights: 'all' },
   { text: 'Поиск', link: '/hotels/search/', rights: 'all' },
   { text: 'Поддержка', link: '/support/', rights: 'all' },
+  { text: 'Брони', link: '/bookings/', rights: 'all' },
 ];
 
 export const authMenuItems = [

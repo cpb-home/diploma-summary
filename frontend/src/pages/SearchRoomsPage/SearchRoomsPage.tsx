@@ -1,18 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import RoomList from "../../components/RoomList/RoomList";
-import { useAppSelector } from "../../components/hooks";
+import { useAppDispatch, useAppSelector } from "../../components/hooks";
 import { useLocation, useNavigate } from "react-router-dom";
+import { isTokenValid } from "../../assets/isTokenValid";
+import { clearCurrentUser } from "../../redux/slices/currentUser";
 
-
-const SearchHotelPage = () => {
+const SearchRoomsPage = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [finDate, setFinDate] = useState<Date | null>(null);
   const currentUser = useAppSelector(state => state.currentUser);
   const navigate = useNavigate();
   const { state } = useLocation();
   const [wrongDate, setWrongDate] = useState('');
+  const dispatch = useAppDispatch();
   
+  useEffect(() => {
+    isTokenValid().then(res => {
+      if (!res) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
+        dispatch(clearCurrentUser());
+      }
+    })
+  }, [dispatch]);
 
   const addBtnHandler = () => {
     navigate('/add/', { state: {itemType: 'hotel-rooms', hotelId: state.hotelId} });
@@ -69,4 +80,4 @@ const SearchHotelPage = () => {
   )
 }
 
-export default SearchHotelPage
+export default SearchRoomsPage
