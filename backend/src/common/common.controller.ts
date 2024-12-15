@@ -14,7 +14,7 @@ import { createReadStream } from 'fs';
 export class CommonController {
   constructor (private readonly commonService: CommonService) {}
 
-  @Get('/hotels') // все гостиницы
+  @Get('/hotels')
   public async getAllHotels(): Promise<IHotelsListItemForFront[]> {
     const allHotels = await this.commonService.getAllHotels();
     const allHotelsForFront: IHotelsListItemForFront[] = [];
@@ -31,7 +31,7 @@ export class CommonController {
     return allHotelsForFront;
   }
 
-  @Get('/hotel-rooms/:startDate/:finDate') // все номера. Включены все номера, которые isEnabled
+  @Get('/hotel-rooms/:startDate/:finDate')
   public async getAllRooms(@Param() { startDate, finDate }: IDates): Promise<IRoomListItemForFront[]> {
     const sendRoomsList: IRoomListItemForFront[] = [];
     const allRooms = await this.commonService.getAllRooms(startDate, finDate);
@@ -43,7 +43,7 @@ export class CommonController {
     return sendRoomsList;
   }
 
-  @Get('/hotel-rooms/:id') // инфо о номере. 
+  @Get('/hotel-rooms/:id')
   public async getRoomInfo(@Param() { id }: IparamId): Promise<IRoomListItemForFront> {
     const idObjectId = new Types.ObjectId(id);
     const currentRoom = await this.commonService.getRoomInfo(idObjectId);
@@ -53,7 +53,7 @@ export class CommonController {
     return null;
   }
 
-  @Get('/hotel/:id') // инфо о гостинице. 
+  @Get('/hotel/:id')
   public async getHotelInfo(@Param() { id }: IparamId): Promise<IHotelsListItemForFront> {
     const idObjectId = new Types.ObjectId(id);
     const currentHotel = await this.commonService.getHotelInfo(idObjectId);
@@ -102,7 +102,7 @@ export class CommonController {
   }*/
 
     @Get('/files/:filePath')
-    getFile(@Param('filePath') filePath: string, @Res() res) { console.log('reading');
+    getFile(@Param('filePath') filePath: string, @Res() res) {
       const file = createReadStream(`./uploads/${filePath}`);
       file.pipe(res);
     }

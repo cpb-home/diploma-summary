@@ -4,13 +4,13 @@ export interface IparamId {
 
 export interface IparamIdWithDates {
   id: string;
-  startDate: Date;
-  finDate: Date;
+  startDate: string;
+  finDate: string;
 }
 
 export interface IDates {
-  startDate: Date;
-  finDate: Date;
+  startDate: string;
+  finDate: string;
 }
 
 export interface IparamEmail {

@@ -33,6 +33,12 @@ const ChangePageItem = ({id, itemType}: IChangePage) => {
     e.preventDefault();
 
     const token = localStorage.getItem("accessToken");
+    const role = currentUser.role ?? '';
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+        headers.append('X-Roles', role);
     const dataToSend = {
       description,
     };
@@ -42,10 +48,7 @@ const ChangePageItem = ({id, itemType}: IChangePage) => {
     fetch (import.meta.env.VITE_ADMIN + route + id, {
       method: 'PUT',
       credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
+      headers,
       body: JSON.stringify(dataToSend)}
     )
       .then(res => res.json())

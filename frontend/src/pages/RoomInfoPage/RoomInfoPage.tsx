@@ -70,8 +70,7 @@ const RoomInfoPage = () => {
         dateEnd: finDate
       }
       
-      //const role = currentUser.role ?? '';
-      const role = 'client';
+      const role = currentUser.role ?? '';
       const headers = new Headers({
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',

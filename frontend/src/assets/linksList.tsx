@@ -1,26 +1,27 @@
 export const clientMenuItems = [
-  { text: 'Личный кабинет', link: '/account/', rights: 'client' },
-  { text: 'Бронирования', link: '/booking/usage/', rights: 'client' },
+  { text: 'Брони', link: '/bookings/', rights: 'client', state: {page: ''} },
+  { text: 'Поддержка', link: '/support/', rights: 'client' },
 ];
 
 export const adminMenuItems = [
-  { text: 'Управление гостиницами', link: '/hotels/manage/', rights: 'admin' },
-  { text: 'Управление пользователями', link: '/users/manage/', rights: 'admin' },
+  { text: 'Гостиницы', link: '/', rights: 'admin' },
+  { text: 'Номера', link: '/hotels/search/', rights: 'admin', state: {hotelId: ''} },
+  { text: 'Пользователи', link: '/account/', rights: 'admin', state: {page: 'users'} },
 ];
 
 export const managerMenuItems = [
-  { text: 'Управление бронью', link: '/booking/manage/', rights: 'manager' },
-  { text: 'Общение с клиентами', link: '/support/manage/', rights: 'manager' },
+  { text: 'Обращения', link: '/', rights: 'manager' },
+  { text: 'Пользователи', link: '/account/', rights: 'manager', state: {page: 'users'} },
+  { text: 'Брони', link: '/', rights: 'manager' },
 ];
 
 export const mainMenuItems = [
   { text: 'Гостиницы', link: '/', rights: 'all' },
   { text: 'Поиск', link: '/hotels/search/', rights: 'all' },
   { text: 'Поддержка', link: '/support/', rights: 'all' },
-  { text: 'Брони', link: '/bookings/', rights: 'all' },
 ];
 
 export const authMenuItems = [
-  { text: 'Авторизация', link: '/logIn/', rights: 'all' },
-  { text: 'Регистрация', link: '/register/', rights: 'all' },
+  { text: 'Вход', link: '/account/', rights: 'all', state: {page: 'account'} },
+  { text: 'Регистрация', link: '/account/', rights: 'all', state: {page: 'register'} },
 ];

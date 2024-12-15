@@ -16,7 +16,7 @@ const AccountPage = () => {
 
   useEffect(() => {
     isTokenValid().then(res => {
-      if (!res) {
+      if (!res && state.page !== 'register') {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userId');
         dispatch(clearCurrentUser());

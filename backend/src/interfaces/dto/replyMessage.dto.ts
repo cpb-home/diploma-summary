@@ -4,4 +4,7 @@ export class ReplyMessageDto {
 
   @IsOptional()
   message?: string;
+
+  @IsOptional()
+  statusCode?: number;
 }

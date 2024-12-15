@@ -76,7 +76,7 @@ const RoomList = (props: ISearchStateProps) => {
                           <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
                         </Link>
                         {currentUser.isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && 
-                        <div className="hotelsList__item-adminCont">
+                        <div className="roomList__item-btnCont">
                           <Button text="Изменить" type="button" handler={() => changeRoomHandler(e.id)} />
                         </div>
                         }
@@ -85,9 +85,10 @@ const RoomList = (props: ISearchStateProps) => {
                       <div key={i}>
                         <div className="roomList__notAlink">
                           <RoomListItem id={e.id} description={e.description} hotel={e.hotel} images={e.images} />
+                          <div className="roomList__comment">Чтобы забронировать номер, выберите даты заезда и выезда.</div>
                         </div>
                         {currentUser.isAuthenticated && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && 
-                          <div className="hotelsList__item-adminCont">
+                          <div className="roomList__item-btnCont">
                             <Button text="Изменить" type="button" handler={() => changeRoomHandler(e.id)} />
                           </div>
                         }

@@ -12,11 +12,13 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { ClientModule } from 'src/client/client.module';
+import { Reservation, ReservationSchema } from 'src/schemas/reservation.schema';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
+    
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => {
         return {
@@ -33,6 +35,7 @@ import { ClientModule } from 'src/client/client.module';
       { name: User.name, schema: UserSchema },
       { name: Hotel.name, schema: HotelSchema},
       { name: HotelRoom.name, schema: HotelRoomSchema},
+      { name: Reservation.name, schema: ReservationSchema },
     ])
   ],
   controllers: [CommonController],

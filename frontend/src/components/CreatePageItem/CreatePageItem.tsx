@@ -4,18 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../hooks";
 import Button from "../../ui/Button";
 import Input from "../../ui/Input";
-/*
-interface FileListItem {
-  name: string;
-  size: number;
-  type: string;
-}
 
-interface IFormData {
-  description: string;
-  images: File[];
-}
-*/
 const CreatePageItem = ({ itemType, hotelId }: IAddPage) => {
   const navigate = useNavigate();
   const currentUser = useAppSelector(state => state.currentUser);
@@ -23,7 +12,7 @@ const CreatePageItem = ({ itemType, hotelId }: IAddPage) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
-console.log(hotelId); console.log('*******');
+
   useEffect(() => {
     if (!currentUser.isAuthenticated || !(currentUser.role === 'admin' || currentUser.role === 'mainAdmin')) {
       navigate('/account/', { state: {page: 'account'} })
@@ -33,8 +22,14 @@ console.log(hotelId); console.log('*******');
   const formSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem("accessToken");
+    const role = currentUser.role ?? '';
 
     if (itemType === 'hotels') {
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+      headers.append('X-Roles', role);
       const dataToSend = {
         title,
         description,
@@ -42,10 +37,7 @@ console.log(hotelId); console.log('*******');
       fetch (import.meta.env.VITE_ADMIN + itemType, {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
         body: JSON.stringify(dataToSend)}
       )
         .then(res => res.json())
@@ -59,12 +51,14 @@ console.log(hotelId); console.log('*******');
           if (res.statusCode !== 400) {
             setDescription('');
             navigate('/');
-            
-              //navigate('/hotels/search/', { state: {hotelId: currentItem?.hotel.id} });
           }
         })
         .catch(e => console.log('Catch error: ' + e));
     } else if (itemType === 'hotel-rooms') {
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        'X-Roles': role
+      });
       const formData = new FormData();
       formData.append('description', description);
       
@@ -77,9 +71,7 @@ console.log(hotelId); console.log('*******');
       fetch (import.meta.env.VITE_ADMIN + itemType + '/' + hotelId, {
         method: 'POST',
         credentials: 'include',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
         body: formData
       })
         .then(res => res.json())
@@ -106,44 +98,12 @@ console.log(hotelId); console.log('*******');
   const inputStateHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.name === 'title') {
       setTitle(e.target.value);
-    } /*else if (e.target.name === '') {
-      setPassword(e.target.value);
-    }*/
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    /*const files = Array.from(e.target.files ?? []);
-
-    setSelectedFiles(files.map(file => ({
-      name: file.name,
-      size: file.size,
-      type: file.type,
-    })));*/
     setSelectedFiles(Array.from(e.target.files ?? []));
   };
-
-
-/*
-let formData = new FormData();
-            formData.append('profile-image', document.getElementById("uploadDP").value);
-            fetch('http://15.207.55.233/user/helper/profile-image', {
-                method: 'PATCH',
-                headers: {
-                    'Accept': 'application/json, application/xml, text/plain, text/html, *.*',
-                    'Content-Type': 'multipart/form-data'
-                },
-                body: formData
-            })
-                .then(res => res.json())
-                .then(res => {
-                    console.log(res);                   
-                })
-                .catch(err => {
-                    console.log(err);
-                })
-*/
-
-
 
   return (
     <div className="changePage__infoCont">

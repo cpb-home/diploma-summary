@@ -27,15 +27,18 @@ const AdminUsers = () => {
     async function checkToken() {
       if (await isTokenValid()) {
         const token = localStorage.getItem("accessToken");
+        const role = currentUser.role ?? '';
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+        headers.append('X-Roles', role);
         if (currentUser.isAuthenticated && token) {
           try {
             fetch(import.meta.env.VITE_ADMIN + 'users', {
               method: 'GET',
               credentials: 'include',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`,
-              },
+              headers,
             })
               .then(res => res.json())
               .then(res => {
@@ -59,7 +62,7 @@ const AdminUsers = () => {
     } else {
       setMessage('');
     }
-  }, [addUser, passwordConf, currentUser, password, dispatch, navigate]);
+  }, [addUser, passwordConf, currentUser, password, dispatch, navigate, role]);
 
   const addUserHandler = () => {
     setAddUser(true);
@@ -69,7 +72,13 @@ const AdminUsers = () => {
     e.preventDefault();
     
     if ((password === passwordConf) && await isTokenValid()) {
-      const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("accessToken");
+    const currentRole = currentUser.role ?? '';
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    headers.append('X-Roles', currentRole);
       const dataToSend = {
         email,
         password,
@@ -82,10 +91,7 @@ const AdminUsers = () => {
         fetch(import.meta.env.VITE_ADMIN + 'users', {
           method: 'POST',
           credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
           body: JSON.stringify(dataToSend),
         })
           .then(res => res.json())

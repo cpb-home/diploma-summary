@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Param, Post, UseGuards } from '@nestjs/common';
 import { ClientService } from './client.service';
 import { IparamId } from 'src/interfaces/param-id';
 import { CreateReservationDto } from 'src/interfaces/dto/create-reservation';
@@ -8,6 +8,7 @@ import { IReservationItemForFront } from 'src/interfaces/param-reservations';
 import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { Roles, RolesGuard } from 'src/validation/rolesGuard';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { CreateUserDto } from 'src/interfaces/dto/create-user';
 
 @Controller('/api/client')
 export class ClientController {
@@ -41,21 +42,38 @@ export class ClientController {
   }
 
   @Post('/register')
-  public registerUser() {
+  public async registerUser(@Body() body: CreateUserDto): Promise<ReplyMessageDto> {
+    const allUsers = await this.clientService.getAllUsers();
+    const isExisted = allUsers.find(e => e.email === body.email);
 
+    if (isExisted) {
+      throw new HttpException('Такой пользователь уже существует', 400);
+    }
+
+    if (this.clientService.registerUser(body)) {
+      return { message: 'Вы успешно зарегистрировались.', statusCode: 200 };
+    }
+    return { message: 'Не удалось Зарегистрировать.', statusCode: 400 };
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete('/reservations/:id')
-  public deleteBooking(@Param() { id }: IparamId) {
-    
+  @Roles('client')
+  public async deleteBooking(@Param() { id }: IparamId): Promise<ReplyMessageDto> {
+    const bookingId = new Types.ObjectId(id);
+
+    if (await this.clientService.deleteBooking(bookingId)) {
+      return { message: 'Бронирование отменено' };
+    }
+    return { message: 'Не удалось отменить бронирование' };
   }
 
-  @Post('/support-requests')
+  @Post('/support-requests')// НЕ ГОТОВО /////////////////////////////
   public createSupportMessage() {
     
   }
 
-  @Get('/support-requests')
+  @Get('/support-requests')// НЕ ГОТОВО /////////////////////////////
   public getSupportMessagesList() {
     
   }

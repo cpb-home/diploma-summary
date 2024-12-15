@@ -18,6 +18,7 @@ import { UpdateRoomDto } from 'src/interfaces/dto/update-room';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { Roles, RolesGuard } from 'src/validation/rolesGuard';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -25,6 +26,7 @@ export class AdminController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/users')
+  @Roles('admin', 'mainAdmin')
   public async getAllUsers(): Promise<UserDto[]> {
     const users = await this.adminService.getAllUsers();
     const usersForFront: UserDto[] = [];
@@ -39,22 +41,17 @@ export class AdminController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/user/:email')
+  @Roles('admin', 'mainAdmin')
   public async getUserInfo(@Param() { email }: IparamEmail): Promise<UserDto> {
     const user = await this.adminService.getUserInfo(email);
     
     return toUserDto(user);
   }
   
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/users')
+  @Roles('admin', 'mainAdmin')
   public async createUser(@Body() body: CreateUserDto): Promise<ReplyMessageDto> {
-    //  НАДО:
-    //  СДЕЛАТЬ ПОЛУЧЕНИЕ ДАННЫХ ПО ЭТОМУ РОУТУ
-    //  НАСТРОИТЬ ВСЕ АДМИНСКИЕ РОУТЫ, ЧТОБЫ ПОЛУЧАЛИ ТОЛЬКО ОТ АДМИНА, ИНАЧЕ 403
-    /*
-      1. if (currentUser isNotAuthorized) error 401
-      2. id (currentUser !== 'admin' || currentUser !== 'mainAdmin') error 403
-    */
-
     const allUsers = await this.adminService.getAllUsers();
     
     const isExisted = allUsers.find(e => e.email === body.email);
@@ -89,19 +86,19 @@ export class AdminController {
     
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/hotels')
+  @Roles('admin', 'mainAdmin')
   public async createHotel(@Body() body: CreateHotelDto): Promise<ReplyMessageDto> {
     if (await this.adminService.createHotel(body)) {
-      return { message: 'Гостиница успешно добавлена' };
+      return { message: 'Гостиница успешно добавлена', statusCode: 200 };
     }
-    return { message: 'Не удалось добавить гостиницу' };
+    return { message: 'Не удалось добавить гостиницу', statusCode: 400 };
   }
-  /*
-    1. 401 - если пользователь не авторизован
-    2. 403 - если пользователь не админ
-  */
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/hotels/:id')
+  @Roles('admin', 'mainAdmin')
   public async updateHotel(
     @Param() { id }: IparamId,
     @Body() body: UpdateHotelDto,
@@ -111,30 +108,25 @@ export class AdminController {
     }
     return { message: 'Не удалось обновить гостиницу' };
   }
-  /*
-    1. 401 - если пользователь не авторизован
-    2. 403 - если пользователь не админ
-  */
 
   @Delete('/hotels/:id')
   public deleteHotel(@Param() { id }: IparamId): Promise<UserDocument> {
     return this.adminService.deleteUser(id);
   }
 
-
-
   @Get('/hotel-rooms/:hotelId')
   public getAllRoomsOfHotel(): Promise<FromBaseHotel[]> {
     return;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/hotel-rooms/:id')
+  @Roles('admin', 'mainAdmin')
   @UseInterceptors(FilesInterceptor('file'))
   public async createRoom(
     @Body() body,
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Param() { id }: IparamId,): Promise<ReplyMessageDto> {
-    //console.log(files);
     const images: string[] = [];
 
     for (const file of files) {
@@ -143,8 +135,6 @@ export class AdminController {
       images.push(fileName);
     }
 
-    console.log('images', images);
-
     const create = await this.adminService.createRoom({hotel: new Types.ObjectId(id), description: body.description, images: images});
 
     if (create) {
@@ -152,12 +142,10 @@ export class AdminController {
     }
     return { message: 'Не удалось добавить номер' };
   }
-  /*
-    1. 401 - если пользователь не авторизован
-    2. 403 - если пользователь не админ
-  */
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put('/hotel-rooms/:id')
+  @Roles('admin', 'mainAdmin')
   public async updateRoom(
     @Param() { id }: IparamId,
     @Body() body: UpdateRoomDto,
@@ -166,15 +154,6 @@ export class AdminController {
       return { message: 'Комната успешно обновлена' };
     }
     return { message: 'Не удалось обновить комнату' };
-  }
-  /*
-    1. 401 - если пользователь не авторизован
-    2. 403 - если пользователь не админ
-  */
-
-  @Delete('/hotel-rooms/:id')
-  public deleteRoom(@Param() { id }: IparamId): Promise<UserDocument> {
-    return this.adminService.deleteUser(id);
   }
 }
 

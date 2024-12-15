@@ -66,11 +66,11 @@ export interface IAddPage {
 
 export interface IBookingsItem {
   id: string;
-  starDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   hotelRoom: {
     description: string;
-    images: string;
+    images: string[];
   };
   hotel: {
     title: string;

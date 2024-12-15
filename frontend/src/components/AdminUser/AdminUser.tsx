@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { IUserInfo } from "../../models/interfaces";
+import { useAppSelector } from "../hooks";
 
 interface IProps {
   email: string;
@@ -8,18 +9,22 @@ interface IProps {
 
 const AdminUser = ({ email, number }: IProps) => {
   const [user, setUser] = useState<IUserInfo | null>();
+  const currentUser = useAppSelector(state => state.currentUser);
 
   useEffect(() => {
     if (email) {
       try {
         const token = localStorage.getItem('accessToken');
+        const role = currentUser.role ?? '';
+        const headers = new Headers({
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        });
+        headers.append('X-Roles', role);
         fetch(import.meta.env.VITE_ADMIN + 'user/' + email, {
           method: 'GET',
           credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
+          headers,
         })
           .then(res => res.json())
           .then(res => {
@@ -29,7 +34,7 @@ const AdminUser = ({ email, number }: IProps) => {
         console.log(e);
       }
     }
-  }, [email])
+  }, [currentUser.role, email])
 
   return (
     <div>
