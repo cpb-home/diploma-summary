@@ -36,9 +36,9 @@ export class ClientController {
       dateEnd: body.dateEnd
     }
     if (await this.clientService.createBooking(requiredBody)) {
-      return { message: 'Номер успешно забронирован' };
+      return { message: 'Номер успешно забронирован', statusCode: 200 };
     }
-    return { message: 'Не удалось забронировать номер' };
+    return { message: 'Не удалось забронировать номер', statusCode: 400 };
   }
 
   @Post('/register')
@@ -63,9 +63,9 @@ export class ClientController {
     const bookingId = new Types.ObjectId(id);
 
     if (await this.clientService.deleteBooking(bookingId)) {
-      return { message: 'Бронирование отменено' };
+      return { message: 'Бронирование отменено', statusCode: 200 };
     }
-    return { message: 'Не удалось отменить бронирование' };
+    return { message: 'Не удалось отменить бронирование', statusCode: 400 };
   }
 
   @Post('/support-requests')// НЕ ГОТОВО /////////////////////////////

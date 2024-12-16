@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import { IUserInfo } from "../../models/interfaces";
-import { useAppSelector } from "../hooks";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { Link, useNavigate } from "react-router-dom";
+import { isTokenValid } from "../../assets/isTokenValid";
+import { clearCurrentUser } from "../../redux/slices/currentUser";
 
 interface IProps {
   email: string;
@@ -10,8 +13,18 @@ interface IProps {
 const AdminUser = ({ email, number }: IProps) => {
   const [user, setUser] = useState<IUserInfo | null>();
   const currentUser = useAppSelector(state => state.currentUser);
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
+    isTokenValid().then(res => {
+      if (!res) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('userId');
+        dispatch(clearCurrentUser());
+        navigate('/account/', { state: {page: 'account'} })
+      }
+    })
     if (email) {
       try {
         const token = localStorage.getItem('accessToken');
@@ -34,16 +47,24 @@ const AdminUser = ({ email, number }: IProps) => {
         console.log(e);
       }
     }
-  }, [currentUser.role, email])
+  }, [currentUser.role, email]);
 
   return (
     <div>
-      { user ? 
-        `${number}. Имя: ${user.name}, e-mail: ${user.email}, Роль: ${user.role} ${user.contactPhone ? ', Телефон: ' + user.contactPhone : ''
-        }` : ''
-      }
+      { user && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin') ? 
+        <div className="userList__itemCont">
+          e-mail: {user.email}, {number}. Имя: {user.name}, Роль: {user.role} {user.contactPhone ? ', Телефон: ' + user.contactPhone : ''}
+        </div>
+      : '' }
+      { user && currentUser.role === 'manager' ? 
+        <div className="userList__itemCont">
+          {number}. 
+          <strong> e-mail:</strong> {user.email},
+          <strong> Имя:</strong> {user.name}
+          {user.contactPhone && <span>, <strong>Телефон:</strong> {user.contactPhone}</span>}. <Link className="userList__link" to={'/manage-bookings/'} state={{userId: user.id}}>Смотреть брони пользователя</Link>
+        </div>
+      : '' }
     </div>
   )
 }
-
-export default AdminUser
+export default AdminUser;

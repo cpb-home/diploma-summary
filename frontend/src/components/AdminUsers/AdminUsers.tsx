@@ -34,8 +34,9 @@ const AdminUsers = () => {
         });
         headers.append('X-Roles', role);
         if (currentUser.isAuthenticated && token) {
+          const link = currentUser.role === 'manager' ? import.meta.env.VITE_MANAGER : import.meta.env.VITE_ADMIN;
           try {
-            fetch(import.meta.env.VITE_ADMIN + 'users', {
+            fetch(link + 'users', {
               method: 'GET',
               credentials: 'include',
               headers,
@@ -142,7 +143,7 @@ const AdminUsers = () => {
   return (
     <div className="userslist__cont">
       <div className="addUser__message">{replyMessage}</div>
-      {!addUser && 
+      {(currentUser.role === 'admin' || currentUser.role === 'mainAdmin') && !addUser && 
         <div className="addUserBtn__cont">
           <Button text="Добавить пользователя" type="button" handler={addUserHandler} />
         </div>
@@ -169,7 +170,6 @@ const AdminUsers = () => {
           </form>
         </div>
       }
-      
       {!addUser && <h2>Список имеющихся пользователей</h2> }
       {users 
         ? users.length > 0
@@ -177,6 +177,22 @@ const AdminUsers = () => {
             : <div>Пользователи не обнаружены</div>
         : <div>Не удалось загрузить пользователей</div>
       }
+
+
+
+
+
+
+
+
+
+
+
+        
+        
+        
+        
+        
       
     </div>
   )

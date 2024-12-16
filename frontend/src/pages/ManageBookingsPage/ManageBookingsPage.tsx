@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../components/hooks";
 import { IBookingsItem } from "../../models/interfaces";
+import { useAppDispatch, useAppSelector } from "../../components/hooks";
 import { isTokenValid } from "../../assets/isTokenValid";
 import { clearCurrentUser } from "../../redux/slices/currentUser";
-import BookingsListItem from "../../components/BookingsListItem/BookingsListItem";
 import Button from "../../ui/Button";
+import BookingsListItem from "../../components/BookingsListItem/BookingsListItem";
 
-const BookingsPage = () => {
+
+const ManageBookingsPage = () => {
   const { state } = useLocation();
   const [bookings, setBookings] = useState<IBookingsItem[] | null>(null);
   const currentUser = useAppSelector(state => state.currentUser);
@@ -18,7 +19,7 @@ const BookingsPage = () => {
 
   useEffect(() => {
     isTokenValid().then(res => {
-      if (!res) {
+      if (!res || currentUser.role !== 'manager') {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('userId');
         dispatch(clearCurrentUser());
@@ -29,7 +30,7 @@ const BookingsPage = () => {
         }
       }
     })
-
+/*
     if (replyMessage === '') {
       if (state.replyMessage && state.replyMessage !== '') {
         setReplyMessage(state.replyMessage);
@@ -37,9 +38,9 @@ const BookingsPage = () => {
           setReplyMessage('');
         }, 5000);
       }
-    }
+    }*/
     
-    if (currentUser) {
+    if (state.userId) {
       const token = localStorage.getItem("accessToken");
       const role = currentUser.role ?? '';
       const headers = new Headers({
@@ -47,8 +48,8 @@ const BookingsPage = () => {
         'Content-Type': 'application/json',
       });
       headers.append('X-Roles', role);
-
-      fetch (import.meta.env.VITE_CLIENT + 'reservations/' + currentUser.id, {
+      
+      fetch (import.meta.env.VITE_MANAGER + 'reservations/' + state.userId, {
         method: 'GET',
         credentials: 'include',
         headers,
@@ -61,8 +62,6 @@ const BookingsPage = () => {
         })
         .catch(e => console.log('Catch error: ' + e));
     }
-    
-    
   }, [currentUser, dispatch, navigate, reloadKey]);
 
   const deleteBookingHandler = (bookingId: string) => {
@@ -82,7 +81,7 @@ const BookingsPage = () => {
         });
         headers.append('X-Roles', role);
   
-        fetch (import.meta.env.VITE_CLIENT + 'reservations/' + bookingId, {
+        fetch (import.meta.env.VITE_MANAGER + 'reservations/' + bookingId, {
           method: 'DELETE',
           credentials: 'include',
           headers,
@@ -102,18 +101,19 @@ const BookingsPage = () => {
     })
   };
 
+
   return (
     <div className="container">
       <div className="main__cont">
         <div className="addUser__message">{replyMessage}</div>
-        <h1>Ваши брони</h1>
+        <h1>Брони пользователя {}</h1>
         <div className="bookings__list">
           {bookings ? 
               bookings.length > 0 ?
                 bookings.map((e, i) => 
                 <div key={i}>
                   <BookingsListItem itemInfo={e} />
-                  {currentUser.isAuthenticated && (currentUser.role === 'client' || currentUser.role === 'mainAdmin') && 
+                  {currentUser.isAuthenticated && (currentUser.role === 'manager') && 
                     <div className="bookings__list-btnCont">
                       <Button text="Удалить бронь" type="button" handler={() => deleteBookingHandler(e.id)} />
                     </div>
@@ -130,4 +130,4 @@ const BookingsPage = () => {
   )
 }
 
-export default BookingsPage;
+export default ManageBookingsPage;

@@ -39,7 +39,7 @@ const AccountPage = () => {
 
         {currentUser.isAuthenticated && state.page === 'account' && <Account />}
 
-        {currentUser.isAuthenticated && state.page === 'users' && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin' ) && <AdminUsers />}
+        {currentUser.isAuthenticated && state.page === 'users' && (currentUser.role === 'admin' || currentUser.role === 'mainAdmin' || currentUser.role === 'manager' ) && <AdminUsers />}
 
         
       </div>

@@ -10,6 +10,7 @@ import CreatePage from './pages/CreatePage/CreatePage';
 import RoomInfoPage from './pages/RoomInfoPage/RoomInfoPage';
 import BookingsPage from './pages/BookingsPage/BookingsPage';
 import SearchRoomsPage from './pages/SearchRoomsPage/SearchRoomsPage';
+import ManageBookingsPage from './pages/ManageBookingsPage/ManageBookingsPage';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
         <Route path='/change/' element={<ChangePage />} />
         <Route path='/add/' element={<CreatePage />} />
         <Route path='/bookings/' element={<BookingsPage />} />
+        <Route path='/manage-bookings/' element={<ManageBookingsPage />} />
 
         <Route path='*' element={<NotFoundPage />} />
       </Route>

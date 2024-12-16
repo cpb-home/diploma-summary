@@ -567,6 +567,25 @@ h1, h2, h3 {
   text-align: left;
 }
 
+.userList__itemCont {
+  width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.userList__link {
+  text-decoration: none;
+  color: var(--main-color-green);
+
+  &::before {
+    content: '>>>';
+  }
+
+  &:hover {
+    font-weight: bold;
+  }
+}
+
 .notFound__cont {
   padding-top: 50px;
   display: flex;

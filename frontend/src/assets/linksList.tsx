@@ -12,7 +12,6 @@ export const adminMenuItems = [
 export const managerMenuItems = [
   { text: 'Обращения', link: '/', rights: 'manager' },
   { text: 'Пользователи', link: '/account/', rights: 'manager', state: {page: 'users'} },
-  { text: 'Брони', link: '/', rights: 'manager' },
 ];
 
 export const mainMenuItems = [

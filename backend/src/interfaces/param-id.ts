@@ -16,3 +16,7 @@ export interface IDates {
 export interface IparamEmail {
   email: string;
 }
+
+export interface IparamUserId {
+  userId: string;
+}
