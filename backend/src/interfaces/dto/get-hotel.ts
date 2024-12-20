@@ -1,8 +1,8 @@
 import { IsDate, IsNotEmpty, IsOptional } from "class-validator";
 
-export class FromBaseHotel {
+export class GetHotelDto {
   @IsNotEmpty()
-  _id: string;
+  _id: string | unknown;
 
   @IsNotEmpty()
   title: string;

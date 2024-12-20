@@ -1,12 +1,12 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document, ObjectId } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export type MessageDocument = Document & Message;
 
 @Schema()
 export class Message {
   @Prop({required: true})
-  public author: ObjectId;
+  public author: Types.ObjectId;
 
   @Prop({required: true})
   public sentAt: Date;

@@ -1,18 +1,19 @@
-import { Prop, SchemaFactory } from "@nestjs/mongoose";
-import { Document, ObjectId } from "mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document, Types } from "mongoose";
 import { Message } from "./message.schema";
 
-export type SupportRequestSchema = Document & SupportRequest;
+export type SupportRequestDocument = Document & SupportRequest;
 
+@Schema()
 export class SupportRequest {
   @Prop({required: true})
-  public user: ObjectId;
+  public user: Types.ObjectId;
 
   @Prop({required: true})
   public createdAt: Date;
 
   @Prop()
-  public messages: Message[];
+  public messages: Types.ObjectId[];
 
   @Prop()
   public isActive: boolean;

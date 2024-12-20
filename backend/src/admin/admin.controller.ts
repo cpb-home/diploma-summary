@@ -1,15 +1,12 @@
 import { Body, Controller, Delete, Get, HttpException, Param, Post, Put, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
-import { UserDocument } from 'src/schemas/user.schema';
 import { IparamEmail, IparamId } from 'src/interfaces/param-id';
 import { UpdateUserDto } from 'src/interfaces/dto/update-user';
-import { HotelDocument } from 'src/schemas/hotel.schema';
 import { CreateHotelDto } from 'src/interfaces/dto/create-hotel';
-//import { createHash } from 'crypto';
-import { UserDto } from 'src/interfaces/dto/user.dto';
-import { toUserDto } from 'src/functions/toDtoFormat';
-import { FromBaseHotel } from 'src/interfaces/fromBaseHotel';
+import { ResponseUserDto } from 'src/interfaces/dto/response-user';
+import { toUserDto } from 'src/functions/toResponseUserDto';
+import { GetHotelDto } from 'src/interfaces/dto/get-hotel';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { UpdateHotelDto } from 'src/interfaces/dto/update-hotel';
@@ -19,6 +16,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { extname } from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { Roles, RolesGuard } from 'src/validation/rolesGuard';
+import { GetUserDto } from 'src/interfaces/dto/get-user';
 
 @Controller('/api/admin')
 export class AdminController {
@@ -27,9 +25,9 @@ export class AdminController {
   @UseGuards(JwtAuthGuard)
   @Get('/users')
   @Roles('admin', 'mainAdmin')
-  public async getAllUsers(): Promise<UserDto[]> {
+  public async getAllUsers(): Promise<ResponseUserDto[]> {
     const users = await this.adminService.getAllUsers();
-    const usersForFront: UserDto[] = [];
+    const usersForFront: ResponseUserDto[] = [];
     if (users.length > 0) {
       for (const user of users) {
         usersForFront.push(toUserDto(user));
@@ -42,7 +40,7 @@ export class AdminController {
   @UseGuards(JwtAuthGuard)
   @Get('/user/:email')
   @Roles('admin', 'mainAdmin')
-  public async getUserInfo(@Param() { email }: IparamEmail): Promise<UserDto> {
+  public async getUserInfo(@Param() { email }: IparamEmail): Promise<ResponseUserDto> {
     const user = await this.adminService.getUserInfo(email);
     
     return toUserDto(user);
@@ -60,28 +58,26 @@ export class AdminController {
     }
     
     if (this.adminService.createUser(body)) {
-      return { message: 'Пользователь успешно добавлен' };
+      return { message: 'Пользователь успешно добавлен', statusCode: 200 };
     }
-    return { message: 'Не удалось добавить пользователя' };
+    return { message: 'Не удалось добавить пользователя', statusCode: 400 };
   }
 
   @Put('/users/:id')
   public updateUser(
     @Param() { id }: IparamId,
     @Body() body: UpdateUserDto,
-  ): Promise<UserDocument> {
+  ): Promise<GetUserDto> {
     return this.adminService.updateUser(id, body);
   }
 
   @Delete('/users/:id')
-  public deleteUser(@Param() { id }: IparamId): Promise<UserDocument> {
+  public deleteUser(@Param() { id }: IparamId): Promise<GetUserDto> {
     return this.adminService.deleteUser(id);
   }
 
-
-
   @Get('/hotels')
-  public async getAllHotels(): Promise<HotelDocument[]> {
+  public async getAllHotels(): Promise<GetHotelDto[]> {
     return await this.adminService.getAllHotels();
     
   }
@@ -109,13 +105,8 @@ export class AdminController {
     return { message: 'Не удалось обновить гостиницу' };
   }
 
-  @Delete('/hotels/:id')
-  public deleteHotel(@Param() { id }: IparamId): Promise<UserDocument> {
-    return this.adminService.deleteUser(id);
-  }
-
   @Get('/hotel-rooms/:hotelId')
-  public getAllRoomsOfHotel(): Promise<FromBaseHotel[]> {
+  public getAllRoomsOfHotel(): Promise<GetHotelDto[]> {
     return;
   }
 
@@ -156,4 +147,3 @@ export class AdminController {
     return { message: 'Не удалось обновить комнату' };
   }
 }
-

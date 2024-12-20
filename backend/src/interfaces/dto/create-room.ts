@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsNotEmpty, IsOptional } from "class-validator";
+import { IsNotEmpty, IsOptional } from "class-validator";
 import { Types } from "mongoose";
 
 export class CreateRoomDto {
@@ -10,16 +10,4 @@ export class CreateRoomDto {
 
   @IsOptional()
   images?: string[];
-/*
-  @IsNotEmpty()
-  @IsDate()
-  createdAt: Date;
-
-  @IsNotEmpty()
-  @IsDate()
-  updatedAt: Date;
-
-  @IsNotEmpty()
-  @IsBoolean()
-  isEnabled: Boolean;*/
 }

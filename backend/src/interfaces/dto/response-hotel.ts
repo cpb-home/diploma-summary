@@ -1,9 +1,12 @@
 import { IsNotEmpty, IsOptional } from "class-validator";
 
-export class CreateHotelDto {
+export class ResponseHotelDto {
+  @IsNotEmpty()
+  id: string;
+
   @IsNotEmpty()
   title: string;
 
   @IsOptional()
-  description?: string;
+  description: string;
 }

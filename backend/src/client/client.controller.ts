@@ -2,13 +2,13 @@ import { Body, Controller, Delete, Get, HttpException, Param, Post, UseGuards } 
 import { ClientService } from './client.service';
 import { IparamId } from 'src/interfaces/param-id';
 import { CreateReservationDto } from 'src/interfaces/dto/create-reservation';
-import { OptionsBookingDto } from 'src/interfaces/dto/options-booking';
 import { Types } from 'mongoose';
-import { IReservationItemForFront } from 'src/interfaces/param-reservations';
 import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { Roles, RolesGuard } from 'src/validation/rolesGuard';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { CreateUserDto } from 'src/interfaces/dto/create-user';
+import { ResponseReservationDto } from 'src/interfaces/dto/response-reservation';
+import { GetSupportRequestDto } from 'src/interfaces/dto/get-supportRequest';
 
 @Controller('/api/client')
 export class ClientController {
@@ -17,7 +17,7 @@ export class ClientController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/reservations/:id')
   @Roles('client')
-  public async getUserBookings(@Param() { id }: IparamId): Promise<IReservationItemForFront[]> {
+  public async getUserBookings(@Param() { id }: IparamId): Promise<ResponseReservationDto[]> {
     const userId = new Types.ObjectId(id);
     const reservations = await this.clientService.getUserBookings(userId);
 
@@ -68,13 +68,9 @@ export class ClientController {
     return { message: 'Не удалось отменить бронирование', statusCode: 400 };
   }
 
-  @Post('/support-requests')// НЕ ГОТОВО /////////////////////////////
-  public createSupportMessage() {
-    
-  }
-
-  @Get('/support-requests')// НЕ ГОТОВО /////////////////////////////
-  public getSupportMessagesList() {
-    
+  @Get('/support-requests/:id')
+  public async getSupportMessagesList(@Param() { id }: IparamId): Promise<GetSupportRequestDto> {
+    const userId = new Types.ObjectId(id);
+    return await this.clientService.getSupportMessagesList(userId);
   }
 }

@@ -11,6 +11,7 @@ import { HotelRoom, HotelRoomSchema } from 'src/schemas/hotelRoom.schema';
 import { JwtModule } from '@nestjs/jwt';
 import { config } from 'dotenv';
 import { ConfigService } from '@nestjs/config';
+import { SupportRequest, SupportRequestSchema } from 'src/schemas/supportRequest.schema';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigService } from '@nestjs/config';
       { name: Reservation.name, schema: ReservationSchema },
       { name: Hotel.name, schema: HotelSchema },
       { name: HotelRoom.name, schema: HotelRoomSchema},
+      { name: SupportRequest.name, schema: SupportRequestSchema },
     ]),
     JwtModule.registerAsync({
       useFactory: (config: ConfigService) => {

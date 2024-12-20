@@ -1,7 +1,6 @@
 import { IsEmail, IsNotEmpty } from "class-validator";
 
-export class GetRoleDto {
+export class RequestTextDto {
   @IsNotEmpty()
-  @IsEmail()
-  email: string;
+  text: string;
 }

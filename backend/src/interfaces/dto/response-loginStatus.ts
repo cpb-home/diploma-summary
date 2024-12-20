@@ -1,8 +1,8 @@
 import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
 
-export class UserDto {
+export class ResponseLoginStatusDto {
   @IsNotEmpty()
-  id: string | unknown;
+  id: string;
 
   @IsNotEmpty()
   @IsEmail()
@@ -12,8 +12,8 @@ export class UserDto {
   role: string;
 
   @IsNotEmpty()
-  name: string;
+  accessToken: any;
 
-  @IsOptional()
-  contactPhone?: string;
+  @IsNotEmpty()
+  expiresIn: any;
 }

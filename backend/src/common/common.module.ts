@@ -13,6 +13,8 @@ import { AuthModule } from 'src/auth/auth.module';
 import { AuthService } from 'src/auth/auth.service';
 import { ClientModule } from 'src/client/client.module';
 import { Reservation, ReservationSchema } from 'src/schemas/reservation.schema';
+import { Message, MessageSchema } from 'src/schemas/message.schema';
+import { SupportRequest, SupportRequestSchema } from 'src/schemas/supportRequest.schema';
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { Reservation, ReservationSchema } from 'src/schemas/reservation.schema';
       { name: Hotel.name, schema: HotelSchema},
       { name: HotelRoom.name, schema: HotelRoomSchema},
       { name: Reservation.name, schema: ReservationSchema },
+      { name: Message.name, schema: MessageSchema },
+      { name: SupportRequest.name, schema: SupportRequestSchema },
     ])
   ],
   controllers: [CommonController],

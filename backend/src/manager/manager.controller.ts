@@ -1,13 +1,14 @@
 import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 import { ManagerService } from './manager.service';
 import { Roles, RolesGuard } from 'src/validation/rolesGuard';
-import { UserDto } from 'src/interfaces/dto/user.dto';
-import { toUserDto } from 'src/functions/toDtoFormat';
+import { ResponseUserDto } from 'src/interfaces/dto/response-user';
+import { toUserDto } from 'src/functions/toResponseUserDto';
 import { IparamId, IparamUserId } from 'src/interfaces/param-id';
 import { Types } from 'mongoose';
-import { IReservationItemForFront } from 'src/interfaces/param-reservations';
 import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { ResponseReservationDto } from 'src/interfaces/dto/response-reservation';
+import { GetSupportRequestDto } from 'src/interfaces/dto/get-supportRequest';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('/api/manager')
@@ -16,9 +17,9 @@ export class ManagerController {
 
   @Get('/users')
   @Roles('manager')
-  public async getAllUsers(): Promise<UserDto[]> {
+  public async getAllUsers(): Promise<ResponseUserDto[]> {
     const users = await this.managerService.getAllUsers();
-    const usersForFront: UserDto[] = [];
+    const usersForFront: ResponseUserDto[] = [];
     if (users.length > 0) {
       for (const user of users) {
         usersForFront.push(toUserDto(user));
@@ -30,7 +31,7 @@ export class ManagerController {
 
   @Get('/reservations/:userId')
   @Roles('manager')
-  public async getUserBookings(@Param() { userId }: IparamUserId): Promise<IReservationItemForFront[]> {
+  public async getUserBookings(@Param() { userId }: IparamUserId): Promise<ResponseReservationDto[]> {
     const id = new Types.ObjectId(userId);
     
     return await this.managerService.getUserBookings(id);
@@ -46,11 +47,10 @@ export class ManagerController {
     }
     return { message: 'Не удалось отменить бронирование', statusCode: 400 };
   }
-/*
+
   @Get('/support-requests')
-  @Roles('manager')
-  public async getAllSupportRequests() {
+  //@Roles('manager')
+  public async getAllSupportRequests(): Promise<GetSupportRequestDto[]> {
     return await this.managerService.getAllSupportRequests();
   }
-*/
 }

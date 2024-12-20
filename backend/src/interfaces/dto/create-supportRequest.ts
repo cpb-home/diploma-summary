@@ -2,7 +2,7 @@ import { IsBoolean, IsDate, IsNotEmpty, IsOptional } from "class-validator";
 import { ObjectId } from "mongoose";
 import { Message } from "src/schemas/message.schema";
 
-export class SupportRequestDto {
+export class CreateSupportRequestDto {
   @IsNotEmpty()
   user: ObjectId;
 
