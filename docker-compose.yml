@@ -38,13 +38,13 @@ services:
     depends_on:
       - mongo
 
-  # frontend:
-  #   build: 
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3001:3001"
-  #   volumes: 
-  #     - ./frontend:/frontend
-  #   depends_on:
-  #     - backend
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes: 
+      - ./frontend:/frontend
+    depends_on:
+      - backend
