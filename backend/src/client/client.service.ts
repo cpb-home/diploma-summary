@@ -89,6 +89,6 @@ export class ClientService {
   }
 
   public async getSupportMessagesList(id): Promise<GetSupportRequestDto> {
-    return await this.SupportrequestModel.findOne({_id: id});
+    return await this.SupportrequestModel.findOne({user: id});
   }
 }

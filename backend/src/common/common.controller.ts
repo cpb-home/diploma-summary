@@ -102,14 +102,15 @@ export class CommonController {
     if (userChat) {
       for (const message of userChat.messages) {
         const messageInfo = await this.commonService.getMessage(message);
+        const userInfo = await this.commonService.getUserInfo(messageInfo.author);
         const currentMessage = {
           id: messageInfo._id.toString(),
-          createdAt: messageInfo.sentAt.toISOString(),
+          sentAt: messageInfo.sentAt.toString(),
           text: messageInfo.text,
-          readAt: messageInfo.readAt.toISOString(),
+          readAt: messageInfo.readAt? messageInfo.readAt.toString() : '',
           author: {
-            id: userId.toString(),
-            name: (await this.commonService.getUserInfo(userId)).name
+            id: userInfo._id.toString(),
+            name: userInfo.name
           }
         }
         messagesList.push(currentMessage);
@@ -128,7 +129,13 @@ export class CommonController {
     let result = false;
 
     if (supportReqest) {
-      const addMessage = await this.commonService.addMessage(body, userId, supportReqest);
+      let addMessage;
+      if (body.managerId) {
+        addMessage = await this.commonService.addMessage(body, new Types.ObjectId(body.managerId), supportReqest);
+      } else {
+        addMessage = await this.commonService.addMessage(body, userId, supportReqest);
+      }
+
       if (addMessage) {
         result = true;
       } else {
@@ -161,9 +168,40 @@ export class CommonController {
     return { message: 'Не удалось отметить сообщение прочитанным', statusCode: 400 }
   }
 
+  @Get('/support-requests/users')
+  public async getAllSupportUsers() {
+    const allRequests = await this.commonService.getAllRequests();
+    allRequests.sort((a, b) => {
+      return (a === b) ? 0 : a ? -1 : 1;
+    } )
+    const users: ResponseUserDto[] = [];
+    
+    for (const request of allRequests) {
+      const user = await this.commonService.getUserInfo(request.user);
+      if (user) {
+          const usersItem = {
+          id: request.user,
+          email: user.email,
+          role: user.role,
+          name: user.name,
+          contactPhone: user.contactPhone
+        }
+        users.push(usersItem);
+      }
+    }
+    
+    return users;
+  }
+
   @Get('/files/:filePath')
   getFile(@Param('filePath') filePath: string, @Res() res) {
     const file = createReadStream(`./uploads/${filePath}`);
     file.pipe(res);
+  }
+
+  @Get('/support-requests/user/:id/unread')
+  public async getUserUnreadCount(@Param() { id }: IparamId): Promise<number> {
+    const userId = new Types.ObjectId(id);
+    return this.commonService.getUserUnreadCount(userId);
   }
 }

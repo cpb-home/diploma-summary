@@ -5,7 +5,7 @@ export class ResponeSupportMessage {
   id: string;
 
   @IsNotEmpty()
-  createdAt: string;
+  sentAt: string;
 
   @IsNotEmpty()
   text: string;

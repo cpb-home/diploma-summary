@@ -1,5 +1,5 @@
 interface IProps {
-  text: string;
+  text?: string;
   type: string;
   name: string;
   required?: boolean;

@@ -43,8 +43,8 @@ import { SupportRequest, SupportRequestSchema } from 'src/schemas/supportRequest
     ])
   ],
   controllers: [CommonController],
-  providers: [CommonService, JwtStrategy, AuthService],
-  exports: [CommonService]
+  providers: [CommonService, JwtStrategy, AuthService, CommonController],
+  exports: [CommonService, CommonController]
 })
 
 export class CommonModule {}

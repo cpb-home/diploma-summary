@@ -54,6 +54,12 @@ export interface IUserInfo {
   contactPhone?: string;
 }
 
+export interface ISupportUser {
+  id: string;
+  name: string;
+  unreadCount: number;
+}
+
 export interface IChangePage {
   itemType: string;
   id: string;

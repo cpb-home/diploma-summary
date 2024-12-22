@@ -3,6 +3,7 @@
   --main-color-MiddleBlue: #233e96;
   --main-color-LightBlue: #829cf3;
   --main-color-Grey: grey;
+  --main-color-LightGrey: rgb(216, 214, 214);
   --main-color-red: red;
   --main-color-green: green;
   --main-color-violet: rgb(190, 19, 190);
@@ -591,6 +592,81 @@ h1, h2, h3 {
   display: flex;
   flex-direction: column;
   gap: 30px;
+}
+
+.support__cont {
+  display: flex;
+  gap: 20px;
+}
+
+.support__chatCont {
+  flex-grow: 1;
+  background-color: var(--main-color-LightGrey);
+  padding: 10px;
+}
+
+.support__usersCont {
+  width: 300px;
+  background-color: var(--main-color-LightGrey);
+  padding: 10px;
+}
+
+.support__usersCont-list {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 10px;
+  height: calc(100vh - 270px);
+  overflow-y: scroll;
+}
+
+.support__chatCont-list {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 10px;
+  height: calc(100vh - 350px);
+  overflow-y: scroll;
+  gap: 5px;
+}
+
+.support__chatCont-listItem {
+  border: 1px solid var(--main-color-DarkBlue);
+  border-radius: 10px;
+  text-align: left;
+  padding: 10px;
+  background-color: var(--main-color-LightBlue);
+}
+
+.support__chatCont-listItemGrey {
+  border: 1px solid var(--main-color-DarkBlue);
+  border-radius: 10px;
+  text-align: right;
+  padding: 10px;
+  background-color: var(--main-color-LightGrey);
+}
+
+.support__usersCont-listItem {
+  display: block;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.support__chatCont-inputCont {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  align-items: center;
+  padding: 0;
+
+  & textarea {
+    width: 250px;
+    margin: 10px;
+    font-size: 16px;
+    color: var(--main-color-DarkBlue);
+    padding: 2px;
+    resize: vertical;
+  }
 }
 
 

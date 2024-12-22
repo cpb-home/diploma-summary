@@ -22,7 +22,7 @@ import { SupportRequest, SupportRequestSchema } from 'src/schemas/supportRequest
     ])
   ],
   controllers: [ClientController],
-  providers: [ClientService],
-  exports: [ClientService]
+  providers: [ClientService, ClientController],
+  exports: [ClientService, ClientController]
 })
 export class ClientModule {}

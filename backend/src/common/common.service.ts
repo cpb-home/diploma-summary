@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { GetHotelDto } from 'src/interfaces/dto/get-hotel';
-import { FromBaseMessage } from 'src/interfaces/fromBaseMessage';
 import { GetRoomDto } from 'src/interfaces/dto/get_room';
 import { GetUserDto } from 'src/interfaces/dto/get-user';
 import { Hotel, HotelDocument } from 'src/schemas/hotel.schema';
@@ -12,7 +11,6 @@ import { Reservation, ReservationDocument } from 'src/schemas/reservation.schema
 import { SupportRequest, SupportRequestDocument } from 'src/schemas/supportRequest.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { GetReservationDto } from 'src/interfaces/dto/get-reservation';
-import { CreateMessageDto } from 'src/interfaces/dto/create-message';
 import { GetSupportRequestDto } from 'src/interfaces/dto/get-supportRequest';
 import { GetMessageDto } from 'src/interfaces/dto/get-message';
 import { RequestTextDto } from 'src/interfaces/dto/request-text';
@@ -110,10 +108,10 @@ export class CommonService {
   }
 
   public async getUserChat(id: Types.ObjectId): Promise<SupportRequestDocument> {
-    return await this.SupportRequestModel.findOne({_id: id});
+    return await this.SupportRequestModel.findOne({user: id});
   }
 
-  public async getMessage(id: Types.ObjectId): Promise<FromBaseMessage> {
+  public async getMessage(id: Types.ObjectId): Promise<GetMessageDto> {
     return this.MessageModel.findOne({_id: id});
   }
 
@@ -152,5 +150,14 @@ export class CommonService {
 
   public async markMessageRead(id: Types.ObjectId): Promise<any> {
     return await this.MessageModel.updateOne({_id: id}, {$set: {readAt: new Date()}});
+  }
+
+  public async getAllRequests(): Promise<GetSupportRequestDto[]> {
+    return await this.SupportRequestModel.find().exec();
+  }
+
+  public async getUserUnreadCount(id: Types.ObjectId): Promise<number> {
+    const res =  await this.MessageModel.countDocuments({author: id, readAt: null});
+    return res;
   }
 }
