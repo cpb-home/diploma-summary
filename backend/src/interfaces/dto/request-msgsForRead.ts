@@ -1,12 +1,9 @@
 import { IsEmail, IsNotEmpty, IsOptional } from "class-validator";
 import { IparamId } from "../param-id";
 
-export class RequestMessageDto {
+export class RequestMsgsForRead {
   @IsNotEmpty()
-  text: string;
-
-  @IsNotEmpty()
-  replyUserId: string | null;
+  msgsList: string[];
 }
 
 /*

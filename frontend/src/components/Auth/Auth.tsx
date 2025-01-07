@@ -11,6 +11,7 @@ const Auth = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const currentUser = useAppSelector(state => state.currentUser);
+  const [replyMessage, setReplyMessage] = useState<string>('');
 
   useEffect(() => {
     if (currentUser.isAuthenticated) {
@@ -44,7 +45,11 @@ const Auth = () => {
             navigate('/account/', { state: {page: 'account'} });
           }
           if (res.message) {
-            console.log(`Message: ${res.message}`)
+            //console.log(`Message: ${res.message}`);
+            setReplyMessage(res.message);
+            setTimeout(() => {
+              setReplyMessage('');
+            }, 5000);
           }
         })
         .catch(e => console.log('Catch error: ' + e));
@@ -63,6 +68,7 @@ const Auth = () => {
 
   return (
     <div className="auth__cont">
+    <div className="addUser__message">{replyMessage !== '' ? replyMessage : ''}</div>
       <h2>Авторизация</h2>
       <p>Для входа в личный кабинет авторизуйтесь</p>
       <form className="auth__form" onSubmit={submitHandler}>

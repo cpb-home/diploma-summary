@@ -14,7 +14,6 @@ const Register = () => {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('button');
 
     const dataToSend = {
       email,

@@ -5,5 +5,5 @@ export class RequestTextDto {
   text: string;
 
   @IsOptional()
-  managerId?: string;
+  replyUserId?: string | null;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { CommonService } from './common.service';
 import { IDates, IparamId, IparamIdWithDates } from 'src/interfaces/param-id';
 import { Types } from 'mongoose';
@@ -15,6 +15,8 @@ import { ResponseHotelDto } from 'src/interfaces/dto/response-hotel';
 import { ReplyMessageDto } from 'src/interfaces/dto/replyMessage.dto';
 import { CreateMessageDto } from 'src/interfaces/dto/create-message';
 import { RequestTextDto } from 'src/interfaces/dto/request-text';
+import { ResponseUserWithCountDto } from 'src/interfaces/dto/response-userWithCount';
+import { RequestMsgsForRead } from 'src/interfaces/dto/request-msgsForRead';
 
 @Controller('/api/common')
 export class CommonController {
@@ -91,9 +93,9 @@ export class CommonController {
   }
 
 
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/support-requests/:id/messages')
-  //@Roles('client', 'manager')
+  @Roles('client', 'manager')
   public async getAllmessages(@Param() { id }: IparamId): Promise<ResponeSupportMessage[]> {
     const userId = new Types.ObjectId(id);
     const userChat = await this.commonService.getUserChat(userId);
@@ -120,45 +122,37 @@ export class CommonController {
     return messagesList;
   }
 
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/support-requests/:id/messages')
-  //@Roles('client', 'manager')
+  @Roles('client', 'manager')
   public async sendMessage(@Body() body: RequestTextDto, @Param() { id }: IparamId): Promise<ReplyMessageDto> {
-    const userId = new Types.ObjectId(id);
-    const supportReqest = await this.commonService.getSupportRequest(userId);
-    let result = false;
+    const currentUserId = new Types.ObjectId(id);
+    try {
+      const addedMessage = await this.commonService.addMessage(body, new Types.ObjectId(currentUserId));
 
-    if (supportReqest) {
-      let addMessage;
-      if (body.managerId) {
-        addMessage = await this.commonService.addMessage(body, new Types.ObjectId(body.managerId), supportReqest);
+      if (body.replyUserId) {
+        const supportReqest = await this.commonService.getSupportRequest(new Types.ObjectId(body.replyUserId));
+        if (supportReqest) {
+          await this.commonService.addMessageToSupportRequest(new Types.ObjectId(String(supportReqest._id)), new Types.ObjectId(String(addedMessage._id)));
+        }
       } else {
-        addMessage = await this.commonService.addMessage(body, userId, supportReqest);
+        const supportReqest = await this.commonService.getSupportRequest(currentUserId);
+        if (supportReqest) {
+          await this.commonService.addMessageToSupportRequest(new Types.ObjectId(String(supportReqest._id)), new Types.ObjectId(String(addedMessage._id)));
+        } else {
+          await this.commonService.createSupportRequest(new Types.ObjectId(String(addedMessage._id)), currentUserId);
+        }
       }
 
-      if (addMessage) {
-        result = true;
-      } else {
-        result = false;
-      }
-    } else {
-      const createMessage = await this.commonService.createSupportRequest(body, userId);
-      if (createMessage) {
-        result = true;
-      } else {
-        result = false;
-      }
-    }
-    
-    if (result) {
       return { message: 'Сообщение успешно отправлено', statusCode: 200 };
+    } catch (e) {
+      throw new HttpException('Не удалось создать сообщение: ' + e, 400);
     }
-    return { message: 'Не удалось отправить сообщение', statusCode: 400 };
   }
 
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('/support-requests/:id/messages/read')
-  //@Roles('client', 'manager')
+  @Roles('client', 'manager')
   public async markMessageRead(@Param() { id }: IparamId): Promise<ReplyMessageDto> {
     const messageId = new Types.ObjectId(id);
 
@@ -168,8 +162,28 @@ export class CommonController {
     return { message: 'Не удалось отметить сообщение прочитанным', statusCode: 400 }
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Post('/support-requests/makeMessages/read')
+  @Roles('client', 'manager')
+  public async markManyMessageRead(@Body() body: RequestMsgsForRead): Promise<ReplyMessageDto> {
+    let result = true;
+
+    for (const msg of body.msgsList) {
+      if ((await this.markMessageRead({id: msg})).statusCode === 400) {
+        result = false;
+      }
+    }
+
+    if (result) {
+      return { message: 'Сообщения отмечены прочитанными', statusCode: 200 }
+    }
+    return { message: 'Не удалось отметить сообщения прочитанными', statusCode: 400 }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/support-requests/users')
-  public async getAllSupportUsers() {
+  @Roles('client', 'manager')
+  public async getAllSupportUsers(): Promise<ResponseUserDto[]> {
     const allRequests = await this.commonService.getAllRequests();
     allRequests.sort((a, b) => {
       return (a === b) ? 0 : a ? -1 : 1;
@@ -193,13 +207,37 @@ export class CommonController {
     return users;
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('/support-requests/usersWithUnread')
+  @Roles('client', 'manager')
+  public async getAllSupportUsersWithUnread(): Promise<ResponseUserWithCountDto[]> {
+    const allSupportUsers = await this.getAllSupportUsers();
+    const usersWithCount: ResponseUserWithCountDto[] = [];
+    
+    if (allSupportUsers) {
+      for (const user of allSupportUsers) {
+        const count = await this.getUserUnreadCount({id: String(user.id)});
+        const newInfo = {
+          id: user.id,
+          name: user.name,
+          unreadCount: count        
+        }
+        usersWithCount.push(newInfo);
+      }
+    }
+
+    return usersWithCount;
+  }
+
   @Get('/files/:filePath')
   getFile(@Param('filePath') filePath: string, @Res() res) {
     const file = createReadStream(`./uploads/${filePath}`);
     file.pipe(res);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/support-requests/user/:id/unread')
+  @Roles('client', 'manager')
   public async getUserUnreadCount(@Param() { id }: IparamId): Promise<number> {
     const userId = new Types.ObjectId(id);
     return this.commonService.getUserUnreadCount(userId);

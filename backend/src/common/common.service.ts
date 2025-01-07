@@ -115,29 +115,25 @@ export class CommonService {
     return this.MessageModel.findOne({_id: id});
   }
 
-  public async addMessage(body: RequestTextDto, id: Types.ObjectId, supportRequest: GetSupportRequestDto): Promise<any> {
+  public async addMessage(body: RequestTextDto, authorId: Types.ObjectId): Promise<GetMessageDto> {
     const message = new this.MessageModel({
-      author: id,
+      author: authorId,
       sentAt: new Date(),
       text: body.text,
     });
 
-    const addedMessage = await this.MessageModel.create(message);
-    return await this.SupportRequestModel.updateOne({_id: supportRequest._id}, {$push: {messages: addedMessage._id}});
+    return  await this.MessageModel.create(message);
   }
 
-  public async createSupportRequest(body: RequestTextDto, id: Types.ObjectId): Promise<GetSupportRequestDto> {
-    const message = new this.MessageModel({
-      author: id,
-      sentAt: new Date(),
-      text: body.text,
-      readAt: null
-    });
-    const addedMessage: GetMessageDto = await this.MessageModel.create(message);
+  public async addMessageToSupportRequest(supportRequestId: Types.ObjectId, messageId: Types.ObjectId): Promise<any> {
+    return await this.SupportRequestModel.updateOne({_id: supportRequestId._id}, {$push: {messages: messageId}});
+  }
+
+  public async createSupportRequest(messageId: Types.ObjectId, authorId: Types.ObjectId): Promise<GetSupportRequestDto> {
     const supportRequest = new this.SupportRequestModel({
-      user: id,
+      user: authorId,
       createdAt: new Date(),
-      messages: [addedMessage._id],
+      messages: [messageId],
       isActive: true,
     });
 

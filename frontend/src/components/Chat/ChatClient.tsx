@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Button from "../../ui/Button";
 import { isTokenValid } from "../../assets/isTokenValid";
 import { clearCurrentUser } from "../../redux/slices/currentUser";
-import { io } from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 interface Message {
   id: string;
@@ -17,9 +17,11 @@ interface Message {
   }
 }
 
-const socket = io('http://localhost:3000');
+//const socket = io('http://localhost:3000');
+const ENDPOINT = 'http://localhost:3000';
 
 const ChatClient = () => {
+  const [socket, setSocket] = useState<Socket | null>(null);
   const currentUser = useAppSelector(state => state.currentUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -40,20 +42,70 @@ const ChatClient = () => {
       }
     });
 
-    socket.connect();
-    
-    socket.on('message', (message: string) => {
-      console.log(message);
+    if (currentUser.id) {
+      getUserMessagesList(currentUser.id);
+    }
+
+    const socketInstance = io(ENDPOINT, {
+      query: { userId: currentUser.id, userRole: currentUser.role},
     });
 
-    socket.emit('requestMessagesList', currentUser.id, function(text: Message[]) {
-      setMessageList(text);
-    });
+    setSocket(socketInstance);
 
     return () => {
-      socket.close();
+      socketInstance.disconnect();
     }
   }, []);
+
+  // useEffect для СОКЕТОВ
+  useEffect(() => {
+      if (socket) {
+        socket.connect();
+  
+        socket.on('message', () => {
+          //console.log('Новое сообщение: ', message);
+          if (currentUser.id) {
+            getUserMessagesList(currentUser.id);
+          }
+        });
+
+        return () => {
+          socket.off('message');
+          socket.disconnect();
+        };
+      }
+    }, [socket]);
+
+  const getUserMessagesList = (id: string): void => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      const role = currentUser.role ?? '';
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      });
+      headers.append('X-Roles', role);
+      fetch(import.meta.env.VITE_COMMON + 'support-requests/' + id + '/messages', {
+        method: 'GET',
+        credentials: 'include',
+        headers,
+      })
+        .then(res => res.json())
+        .then(res => {
+          if (res.statusCode !== 404) {
+            setMessageList(res);
+            setTimeout( ()=> {
+              scrollToBottom();
+            }, 300);
+          } else {
+            console.log(`Message: ${res.message}`);
+          }
+        })
+        .catch(e => console.log('Catch error: ' + e));
+    } catch (e) {
+      console.log('Catch from try: ' + e);
+    }
+  };
 
   const sendMessage = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -66,10 +118,18 @@ const ChatClient = () => {
           dispatch(clearCurrentUser());
           navigate('/account/', { state: {page: 'account'} })
         } else {
-          socket.emit('message', {text: messageInput.trim(), userId: currentUser.id, managerId: null}, function(text: string) {
-            console.log('Результат отправки: ', text);
-          });
-          setMessageInput('');
+          if (socket) {
+            socket.emit('message', {text: messageInput.trim(), replyUserId: null}, function() {
+              //console.log('Результат отправки: ', text);
+            });
+            setMessageInput('');
+            socket.emit('requestMessagesList', currentUser.id, function(text: Message[]) {
+              setMessageList(text);
+            });
+          }
+          if (currentUser.id) {
+            getUserMessagesList(currentUser.id);
+          }
         }
       });
     }
@@ -78,6 +138,16 @@ const ChatClient = () => {
   const areaHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessageInput(e.target.value);
   }
+
+  const scrollToBottom = () => {
+    const chatList = document.querySelector('.support__chatCont-list');
+    if (chatList) {
+      chatList.scrollTo({
+        top: chatList.clientHeight ,
+        behavior: 'smooth'
+      });
+    }
+};
 
   return (
     <div className="support__cont">
